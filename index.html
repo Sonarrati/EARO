@@ -1,24 +1,32 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EARO - Smart Mining Platform</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EARO - Smart Mining & Earnings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #8b5cf6;
-            --accent: #10b981;
-            --dark: #0f172a;
-            --darker: #020617;
-            --light: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --primary: #0a0a0a;
+            --secondary: #1a1a1a;
+            --accent: #00ff9d;
+            --accent-dark: #00cc7d;
+            --text: #ffffff;
+            --text-secondary: #b0b0b0;
+            --danger: #ff4d4d;
+            --warning: #ffb74d;
+            --info: #4d79ff;
+            --success: #00ff9d;
+            --card-bg: #1a1a1a;
+            --border: #333333;
+            --shadow: 0 8px 32px rgba(0, 255, 157, 0.1);
+            --radius: 16px;
+            --radius-sm: 8px;
         }
 
         * {
@@ -28,9 +36,10 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--darker);
-            color: var(--light);
+            font-family: 'Inter', sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -41,73 +50,10 @@
             padding: 0 20px;
         }
 
-        /* Header */
-        header {
-            padding: 20px 0;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .btn {
-            padding: 12px 28px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .btn-primary {
-            background: var(--gradient);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
-        }
-
         /* Hero Section */
         .hero {
-            padding: 160px 0 100px;
-            text-align: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
             position: relative;
             overflow: hidden;
         }
@@ -115,504 +61,964 @@
         .hero::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
-            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 157, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(77, 121, 255, 0.1) 0%, transparent 50%);
         }
 
-        .hero h1 {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, #fff, var(--primary));
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent), var(--info));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .hero p {
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links .btn-login {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-links .btn-login:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            min-height: calc(100vh - 100px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-text h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            background: linear-gradient(45deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
             font-size: 18px;
-            color: #94a3b8;
-            max-width: 600px;
-            margin: 0 auto 40px;
-            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 500px;
         }
 
-        .hero-animation {
-            max-width: 600px;
-            margin: 40px auto;
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 16px 32px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            padding: 16px 32px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .mining-animation {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+        }
+
+        .mining-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
             height: 300px;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent) 0%, transparent 0%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
         }
 
-        /* Features */
-        .features {
+        .mining-circle::before {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .mining-text {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--accent);
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .mining-coins {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: float 3s infinite ease-in-out;
+        }
+
+        .coin {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            border-radius: 50%;
+            animation: coin-float 2s infinite linear;
+        }
+
+        .coin:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .coin:nth-child(2) { top: 30%; right: 30%; animation-delay: 0.5s; }
+        .coin:nth-child(3) { bottom: 40%; left: 40%; animation-delay: 1s; }
+        .coin:nth-child(4) { bottom: 20%; right: 20%; animation-delay: 1.5s; }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes coin-float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* How It Works */
+        .section {
             padding: 100px 0;
         }
 
         .section-title {
             text-align: center;
-            font-size: 36px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 42px;
             font-weight: 700;
-            margin-bottom: 50px;
-            color: white;
+            margin-bottom: 60px;
+            color: var(--text);
         }
 
-        .features-grid {
+        .section-title span {
+            color: var(--accent);
+        }
+
+        .steps {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .feature-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px 30px;
+        .step-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 40px;
             text-align: center;
-            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
+        .step-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow);
         }
 
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: var(--gradient);
-            border-radius: 20px;
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            color: var(--primary);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            color: white;
+            font-size: 24px;
+            font-weight: 700;
         }
 
-        .feature-card h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: white;
+        .step-icon {
+            font-size: 48px;
+            margin-bottom: 24px;
+            color: var(--accent);
+        }
+
+        .step-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 16px;
         }
 
         /* Plans Preview */
         .plans-preview {
-            padding: 100px 0;
-            background: rgba(15, 23, 42, 0.5);
+            background: var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plans-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 10%, rgba(0, 255, 157, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 90%, rgba(77, 121, 255, 0.05) 0%, transparent 50%);
         }
 
         .plans-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .plan-card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .plan-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-
-        .plan-card.popular {
-            border: 2px solid var(--primary);
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 32px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
             position: relative;
         }
 
-        .popular-badge {
+        .plan-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow);
+        }
+
+        .plan-card.popular {
+            border: 2px solid var(--accent);
+            transform: scale(1.05);
+        }
+
+        .plan-badge {
             position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--gradient);
-            color: white;
-            padding: 5px 15px;
+            top: -12px;
+            right: 20px;
+            background: var(--accent);
+            color: var(--primary);
+            padding: 6px 16px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
         }
 
+        .plan-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
         .plan-price {
-            font-size: 36px;
-            font-weight: 800;
-            margin: 20px 0;
-            color: white;
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+
+        .plan-price span {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 400;
         }
 
         .plan-features {
             list-style: none;
-            margin: 20px 0;
+            margin-bottom: 32px;
         }
 
         .plan-features li {
             padding: 8px 0;
-            color: #94a3b8;
-            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* CTA */
-        .cta {
+        .plan-features li::before {
+            content: '✓';
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Referral Benefits */
+        .referral-benefits {
+            padding: 100px 0;
+        }
+
+        .referral-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .referral-tree {
+            position: relative;
+            height: 400px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+
+        .tree-node {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 255, 157, 0.3);
+        }
+
+        .tree-node.level-0 { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .tree-node.level-1 { top: 30%; left: 20%; }
+        .tree-node.level-2 { top: 30%; right: 20%; }
+        .tree-node.level-3 { bottom: 30%; left: 10%; }
+        .tree-node.level-4 { bottom: 30%; right: 10%; }
+
+        .commission-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--info);
+            color: var(--text);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .referral-info h3 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+
+        .commission-levels {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .commission-level {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+
+        .commission-level .level {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .commission-level .percent {
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             padding: 100px 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .cta h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: white;
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300ff9d' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
         }
 
-        .cta p {
-            font-size: 18px;
-            color: #94a3b8;
+        .cta-content {
+            position: relative;
+            z-index: 2;
             max-width: 600px;
-            margin: 0 auto 40px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+
+        .cta-content p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
         }
 
         /* Footer */
-        footer {
+        .footer {
+            background: var(--secondary);
             padding: 60px 0 30px;
-            background: rgba(2, 6, 23, 0.8);
-            border-top: 1px solid var(--glass-border);
+            border-top: 1px solid var(--border);
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 40px;
-            margin-bottom: 40px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
         }
 
         .footer-logo {
-            font-size: 24px;
-            font-weight: 800;
-            background: var(--gradient);
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent), var(--info));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+            background-clip: text;
+            margin-bottom: 16px;
         }
 
-        .footer-links h4 {
-            color: white;
-            margin-bottom: 20px;
+        .footer-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer-section h4 {
             font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
         }
 
         .footer-links a {
-            display: block;
-            color: #94a3b8;
+            color: var(--text-secondary);
             text-decoration: none;
-            margin-bottom: 10px;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid var(--glass-border);
-            color: #64748b;
+            transition: color 0.3s;
             font-size: 14px;
         }
 
-        /* Mobile Navigation */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .hero-text h1 {
+                font-size: 48px;
+            }
+            
+            .referral-container {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--dark);
+            .navbar {
                 flex-direction: column;
-                padding: 20px;
                 gap: 20px;
             }
-
-            .nav-links.active {
-                display: flex;
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
             }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .hero h1 {
+            
+            .hero-text h1 {
                 font-size: 36px;
             }
-
+            
             .section-title {
-                font-size: 28px;
+                font-size: 32px;
+            }
+            
+            .mining-animation {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .mining-circle {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .mining-circle::before {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .plan-card.popular {
+                transform: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="container nav-container">
-            <div class="logo">EARO</div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="nav-links" id="navLinks">
-                <a href="#home">Home</a>
-                <a href="#features">Features</a>
-                <a href="#plans">Plans</a>
-                <a href="#how-it-works">How it Works</a>
-                <a href="login.html" class="btn btn-primary">Start Mining</a>
-            </div>
-        </div>
-    </header>
-
     <!-- Hero Section -->
-    <section class="hero" id="home">
+    <section class="hero">
         <div class="container">
-            <h1>Earn Smart, Mine Smarter</h1>
-            <p>Join thousands of users earning daily through our intelligent mining platform. Start with as low as ₹49 and earn up to ₹25,000!</p>
-            <a href="login.html" class="btn btn-primary">Start Mining Now</a>
+            <nav class="navbar">
+                <div class="logo">EARO</div>
+                <div class="nav-links">
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#plans">Plans</a>
+                    <a href="#referral">Referral</a>
+                    <a href="login.html" class="btn-login">Get Started</a>
+                </div>
+            </nav>
             
-            <div class="hero-animation">
-                <lottie-player
-                    src="https://assets5.lottiefiles.com/packages/lf20_w51pcehl.json"
-                    background="transparent"
-                    speed="1"
-                    loop
-                    autoplay>
-                </lottie-player>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features -->
-    <section class="features" id="features">
-        <div class="container">
-            <h2 class="section-title">Why Choose EARO?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Smart Mining, Real Earnings</h1>
+                    <p>Join thousands of users earning daily through our innovative time-based mining platform. Start with a free plan and scale your earnings with premium plans.</p>
+                    <div class="hero-buttons">
+                        <a href="login.html" class="btn-primary">
+                            Start Earning Now
+                            <span style="font-size: 20px;">→</span>
+                        </a>
+                        <a href="#how-it-works" class="btn-secondary">
+                            Learn More
+                        </a>
                     </div>
-                    <h3>Instant Withdrawal</h3>
-                    <p>Withdraw your earnings instantly to your UPI account with minimum ₹100 withdrawal.</p>
                 </div>
                 
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
+                <div class="hero-visual">
+                    <div class="mining-animation">
+                        <div class="mining-circle" id="miningCircle">
+                            <div class="mining-text" id="miningText">₹0.00</div>
+                        </div>
+                        <div class="mining-coins">
+                            <div class="coin"></div>
+                            <div class="coin"></div>
+                            <div class="coin"></div>
+                            <div class="coin"></div>
+                        </div>
                     </div>
-                    <h3>Referral System</h3>
-                    <p>Earn up to 1% commission from 5 levels of referrals. Get ₹10 bonus on each referral.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Smart Boosters</h3>
-                    <p>Increase your mining speed by 2.5x with premium boosters. Temporary but powerful!</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- How it Works -->
-    <section class="features" id="how-it-works">
+    <!-- How It Works -->
+    <section class="section" id="how-it-works">
         <div class="container">
-            <h2 class="section-title">How It Works</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <h3>1. Sign Up</h3>
-                    <p>Create your account with Google or email. Get free mining sessions instantly.</p>
+            <h2 class="section-title">How <span>EARO</span> Works</h2>
+            <div class="steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">📱</div>
+                    <h3 class="step-title">Sign Up Free</h3>
+                    <p class="step-description">Create your account in seconds. Get 15 days of free mining with 4 sessions per day to experience the platform.</p>
                 </div>
                 
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-gem"></i>
-                    </div>
-                    <h3>2. Choose Plan</h3>
-                    <p>Select from 8 premium plans starting from ₹49 to ₹4999. Higher plans, higher earnings!</p>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">⛏️</div>
+                    <h3 class="step-title">Start Mining</h3>
+                    <p class="step-description">Click to start mining sessions. Each session runs for 1.5 hours and shows an ad. Restart manually to continue.</p>
                 </div>
                 
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-digging"></i>
-                    </div>
-                    <h3>3. Start Mining</h3>
-                    <p>Click start and let the system work. Each session earns you real money automatically.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <h3>4. Withdraw</h3>
-                    <p>Withdraw your earnings directly to your bank via UPI. Minimum ₹100, processed within 24 hours.</p>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">💎</div>
+                    <h3 class="step-title">Upgrade & Earn</h3>
+                    <p class="step-description">Choose a plan that fits your goals. Unlock higher earning caps, more sessions, and withdrawal access.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Plans Preview -->
-    <section class="plans-preview" id="plans">
+    <section class="section plans-preview" id="plans">
         <div class="container">
-            <h2 class="section-title">Popular Plans</h2>
+            <h2 class="section-title">Popular <span>Plans</span></h2>
             <div class="plans-grid">
                 <div class="plan-card">
-                    <h3>Basic Plan</h3>
-                    <div class="plan-price">₹49</div>
+                    <div class="plan-name">Silver</div>
+                    <div class="plan-price">₹99<span>/45 days</span></div>
                     <ul class="plan-features">
-                        <li>30 Days Validity</li>
-                        <li>6 Sessions/Day</li>
-                        <li>Earn ₹150-250</li>
-                        <li>Basic Support</li>
+                        <li>8 mining sessions/day</li>
+                        <li>₹300-450 display earning</li>
+                        <li>₹108-114 real cap</li>
+                        <li>Withdrawal enabled</li>
+                        <li>Referral commission</li>
                     </ul>
-                    <a href="login.html" class="btn btn-primary">Get Started</a>
+                    <a href="login.html" class="btn-secondary" style="width: 100%; text-align: center;">Get Started</a>
                 </div>
                 
                 <div class="plan-card popular">
-                    <div class="popular-badge">Most Popular</div>
-                    <h3>Gold Plan</h3>
-                    <div class="plan-price">₹199</div>
+                    <div class="plan-badge">MOST POPULAR</div>
+                    <div class="plan-name">Gold</div>
+                    <div class="plan-price">₹199<span>/60 days</span></div>
                     <ul class="plan-features">
-                        <li>60 Days Validity</li>
-                        <li>10 Sessions/Day</li>
-                        <li>Earn ₹600-900</li>
-                        <li>Priority Support</li>
-                        <li>Referral Enabled</li>
+                        <li>10 mining sessions/day</li>
+                        <li>₹600-900 display earning</li>
+                        <li>₹215-229 real cap</li>
+                        <li>Priority support</li>
+                        <li>Higher referral rates</li>
                     </ul>
-                    <a href="login.html" class="btn btn-primary">Get Started</a>
+                    <a href="login.html" class="btn-primary" style="width: 100%; text-align: center;">Choose Plan</a>
                 </div>
                 
                 <div class="plan-card">
-                    <h3>Premium Plan</h3>
-                    <div class="plan-price">₹4999</div>
+                    <div class="plan-name">Platinum</div>
+                    <div class="plan-price">₹299<span>/60 days</span></div>
                     <ul class="plan-features">
-                        <li>180 Days Validity</li>
-                        <li>20 Sessions/Day</li>
-                        <li>Earn ₹15,000-25,000</li>
-                        <li>VIP Support</li>
-                        <li>Max Referral Bonus</li>
-                        <li>Priority Withdrawal</li>
+                        <li>12 mining sessions/day</li>
+                        <li>₹900-1400 display earning</li>
+                        <li>₹320-345 real cap</li>
+                        <li>VIP support</li>
+                        <li>Premium features</li>
                     </ul>
-                    <a href="login.html" class="btn btn-primary">Get Started</a>
+                    <a href="login.html" class="btn-secondary" style="width: 100%; text-align: center;">Get Started</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA -->
-    <section class="cta">
+    <!-- Referral Benefits -->
+    <section class="section referral-benefits" id="referral">
         <div class="container">
-            <h2>Start Your Mining Journey Today</h2>
-            <p>Join over 50,000+ users who trust EARO for secure and profitable mining. No technical knowledge required!</p>
-            <a href="login.html" class="btn btn-primary" style="padding: 15px 40px; font-size: 18px;">
-                <i class="fas fa-rocket"></i> Start Mining Now
-            </a>
+            <h2 class="section-title">Earn with <span>Referrals</span></h2>
+            <div class="referral-container">
+                <div class="referral-tree">
+                    <div class="tree-node level-0">You</div>
+                    <div class="tree-node level-1">L1<div class="commission-badge">0.5%</div></div>
+                    <div class="tree-node level-2">L2<div class="commission-badge">0.2%</div></div>
+                    <div class="tree-node level-3">L3<div class="commission-badge">0.15%</div></div>
+                    <div class="tree-node level-4">L4<div class="commission-badge">0.1%</div></div>
+                </div>
+                
+                <div class="referral-info">
+                    <h3>Build Your Team, Earn Passively</h3>
+                    <p>Invite friends and earn commission from their mining activities. The deeper they go in your network, the more you earn!</p>
+                    
+                    <div class="commission-levels">
+                        <div class="commission-level">
+                            <span class="level">Level 1 (Direct)</span>
+                            <span class="percent">0.5% Commission</span>
+                        </div>
+                        <div class="commission-level">
+                            <span class="level">Level 2</span>
+                            <span class="percent">0.2% Commission</span>
+                        </div>
+                        <div class="commission-level">
+                            <span class="level">Level 3</span>
+                            <span class="percent">0.15% Commission</span>
+                        </div>
+                        <div class="commission-level">
+                            <span class="level">Level 4</span>
+                            <span class="percent">0.1% Commission</span>
+                        </div>
+                        <div class="commission-level">
+                            <span class="level">Level 5</span>
+                            <span class="percent">0.05% Commission</span>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-bonus">
+                        <h4>🎉 Instant ₹10 Bonus</h4>
+                        <p>Get ₹10 in your bonus wallet instantly when your referral purchases any ₹99+ plan!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Start Earning?</h2>
+                <p>Join EARO today and start your journey towards passive income. No technical knowledge required - just click and earn!</p>
+                <a href="login.html" class="btn-primary" style="padding: 20px 48px; font-size: 18px;">
+                    Create Free Account
+                    <span style="font-size: 24px;">🚀</span>
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer>
+    <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-about">
                     <div class="footer-logo">EARO</div>
-                    <p>Smart mining platform for everyone. Earn daily with our secure and transparent system.</p>
+                    <p class="footer-description">A revolutionary time-based mining platform that empowers users to earn through simple mining sessions and smart referrals.</p>
                 </div>
                 
-                <div class="footer-links">
+                <div class="footer-section">
                     <h4>Quick Links</h4>
-                    <a href="index.html">Home</a>
-                    <a href="#features">Features</a>
-                    <a href="#plans">Plans</a>
-                    <a href="#how-it-works">How it Works</a>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#plans">Plans</a></li>
+                        <li><a href="#referral">Referral</a></li>
+                    </ul>
                 </div>
                 
-                <div class="footer-links">
+                <div class="footer-section">
                     <h4>Legal</h4>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Refund Policy</a>
-                    <a href="#">KYC Policy</a>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Disclaimer</a></li>
+                    </ul>
                 </div>
                 
-                <div class="footer-links">
+                <div class="footer-section">
                     <h4>Contact</h4>
-                    <a href="mailto:support@earo.com">support@earo.com</a>
-                    <a href="#">Help Center</a>
-                    <a href="#">FAQ</a>
+                    <ul class="footer-links">
+                        <li><a href="mailto:support@earo.com">support@earo.com</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
                 </div>
             </div>
             
-            <div class="copyright">
-                © 2024 EARO Mining Platform. All rights reserved.
+            <div class="footer-bottom">
+                <p>© 2024 EARO. All rights reserved. This is a demo application for educational purposes.</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Mobile menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('navLinks').classList.toggle('active');
-        });
-
-        // Smooth scrolling
+        // Initialize Supabase
+        const supabaseUrl = 'https://qvbvgpzmwomtcvejkibs.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YnZncHptd29tdGN2ZWpraWJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NjE1NDksImV4cCI6MjA4MTEzNzU0OX0.B7ED7dNB3Gdkq8mw20Y5iTixqvxl73UJYTHgKyLfSLs';
+        
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        
+        // Mining animation
+        let miningValue = 0;
+        const miningCircle = document.getElementById('miningCircle');
+        const miningText = document.getElementById('miningText');
+        
+        function updateMiningAnimation() {
+            miningValue += 0.1;
+            if (miningValue > 100) miningValue = 0;
+            
+            // Update circle gradient
+            const degrees = (miningValue / 100) * 360;
+            miningCircle.style.background = `conic-gradient(var(--accent) ${degrees}deg, transparent ${degrees}deg)`;
+            
+            // Update text
+            const earnings = (miningValue * 25).toFixed(2);
+            miningText.textContent = `₹${earnings}`;
+            
+            // Add pulse effect at certain intervals
+            if (Math.floor(miningValue) % 25 === 0) {
+                miningCircle.style.animation = 'none';
+                setTimeout(() => {
+                    miningCircle.style.animation = 'pulse 2s infinite';
+                }, 10);
+            }
+        }
+        
+        // Start animation
+        setInterval(updateMiningAnimation, 50);
+        
+        // Check if user is already logged in
+        async function checkAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                // Update login button to go to dashboard
+                document.querySelectorAll('.btn-login, .btn-primary[href="login.html"]').forEach(btn => {
+                    btn.href = 'dashboard.html';
+                    btn.innerHTML = btn.innerHTML.includes('Get Started') ? 'Go to Dashboard →' : 'Dashboard';
+                });
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', checkAuth);
+        
+        // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
+                if (targetId === '#') return;
                 
                 const targetElement = document.querySelector(targetId);
-                if(targetElement) {
+                if (targetElement) {
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    
-                    // Close mobile menu if open
-                    document.getElementById('navLinks').classList.remove('active');
                 }
             });
-        });
-
-        // Add scroll effect to header
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if(window.scrollY > 50) {
-                header.style.background = 'rgba(15, 23, 42, 0.95)';
-                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.2)';
-            } else {
-                header.style.background = 'rgba(15, 23, 42, 0.8)';
-                header.style.boxShadow = 'none';
-            }
         });
     </script>
 </body>

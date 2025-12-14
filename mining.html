@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mining - EARO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #10b981;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        /* Mining Container */
+        .mining-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .mining-header {
+            margin-bottom: 30px;
+        }
+
+        .mining-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .mining-header p {
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Circular Timer */
+        .circular-timer {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 40px;
+        }
+
+        .timer-circle {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .timer-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 10;
+        }
+
+        .timer-progress {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 1s linear;
+            filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+        }
+
+        .timer-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: 700;
+            font-family: monospace;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .timer-label {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        /* Mining Button */
+        .mining-btn {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .mining-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mining-btn:hover:before {
+            opacity: 1;
+        }
+
+        .mining-btn i {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .mining-btn.active {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .mining-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        /* Sessions List */
+        .sessions-container {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .sessions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .sessions-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .sessions-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .session-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--glass-border);
+            transition: background 0.3s ease;
+        }
+
+        .session-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .session-item:last-child {
+            border-bottom: none;
+        }
+
+        .session-time {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .session-amount {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .session-status {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+        }
+
+        /* Booster Info */
+        .booster-info {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .booster-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .booster-badge {
+            background: var(--gradient);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .booster-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .booster-detail {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .booster-detail i {
+            color: var(--primary);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 12px;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+        }
+
+        .nav-item:hover {
+            color: white;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .circular-timer, .mining-btn {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .timer-display {
+                font-size: 36px;
+            }
+            
+            .mining-btn i {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">EARO</div>
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Loading mining data...</p>
+        </div>
+
+        <!-- Mining Container -->
+        <div class="mining-container">
+            <div class="mining-header">
+                <h1><i class="fas fa-digging"></i> Smart Mining</h1>
+                <p>Start mining session to earn rewards. Each session lasts 90 minutes.</p>
+            </div>
+
+            <!-- Circular Timer -->
+            <div class="circular-timer" id="circularTimer" style="display: none;">
+                <svg class="timer-circle" viewBox="0 0 120 120">
+                    <circle class="timer-bg" cx="60" cy="60" r="54"></circle>
+                    <circle class="timer-progress" cx="60" cy="60" r="54" 
+                            stroke-dasharray="339.292" 
+                            stroke-dashoffset="0"></circle>
+                </svg>
+                <div class="timer-content">
+                    <div class="timer-display" id="timerDisplay">00:00:00</div>
+                    <div class="timer-label" id="timerLabel">Time Remaining</div>
+                </div>
+            </div>
+
+            <!-- Mining Button -->
+            <button class="mining-btn" id="miningButton">
+                <i class="fas fa-play"></i>
+                <span id="buttonText">Start Mining</span>
+                <div id="buttonSubtext" style="font-size: 16px; margin-top: 10px; opacity: 0.8;">
+                    Click to start 90-minute session
+                </div>
+            </button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="todayEarnings">₹0.00</div>
+                <div class="stat-label">Today's Earnings</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" id="sessionsToday">0/10</div>
+                <div class="stat-label">Today's Sessions</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" id="boosterActive">1.0x</div>
+                <div class="stat-label">Booster Multiplier</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" id="nextSession">₹0.50</div>
+                <div class="stat-label">Next Session Earn</div>
+            </div>
+        </div>
+
+        <!-- Booster Info -->
+        <div class="booster-info">
+            <div class="booster-header">
+                <h3><i class="fas fa-bolt"></i> Active Booster</h3>
+                <div class="booster-badge" id="boosterBadge">No Booster</div>
+            </div>
+            
+            <div class="booster-details">
+                <div class="booster-detail">
+                    <i class="fas fa-rocket"></i>
+                    <div>
+                        <div style="font-size: 12px; color: #94a3b8;">Multiplier</div>
+                        <div style="font-weight: 600;" id="boosterMultiplier">1.0x</div>
+                    </div>
+                </div>
+                
+                <div class="booster-detail">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <div style="font-size: 12px; color: #94a3b8;">Time Left</div>
+                        <div style="font-weight: 600;" id="boosterTime">Not Active</div>
+                    </div>
+                </div>
+                
+                <div class="booster-detail">
+                    <i class="fas fa-gem"></i>
+                    <div>
+                        <div style="font-size: 12px; color: #94a3b8;">Extra Earnings</div>
+                        <div style="font-weight: 600; color: var(--accent);" id="boosterExtra">₹0.00</div>
+                    </div>
+                </div>
+                
+                <div class="booster-detail">
+                    <i class="fas fa-store"></i>
+                    <div>
+                        <div style="font-size: 12px; color: #94a3b8;">Action</div>
+                        <a href="plans.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">
+                            Buy Booster <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sessions List -->
+        <div class="sessions-container">
+            <div class="sessions-header">
+                <h3><i class="fas fa-history"></i> Recent Sessions</h3>
+                <div style="font-size: 14px; color: #94a3b8;">
+                    Last 10 sessions
+                </div>
+            </div>
+            
+            <div class="sessions-list" id="sessionsList">
+                <!-- Sessions will be loaded here -->
+                <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                    <i class="fas fa-clock fa-2x" style="margin-bottom: 10px;"></i>
+                    <p>No mining sessions yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="mining.html" class="nav-item active">
+            <i class="fas fa-digging"></i>
+            <span>Mining</span>
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+        <a href="referral.html" class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Referral</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase configuration
+        const supabaseUrl = 'https://qvbvgpzmwomtcvejkibs.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YnZncHptd29tdGN2ZWpraWJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NjE1NDksImV4cCI6MjA4MTEzNzU0OX0.B7ED7dNB3Gdkq8mw20Y5iTixqvxl73UJYTHgKyLfSLs';
+        
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Global variables
+        let user = null;
+        let activePlan = null;
+        let activeSession = null;
+        let activeBooster = null;
+        let miningTimer = null;
+        let totalSessionsToday = 0;
+
+        // Check authentication
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+            user = session.user;
+            await loadMiningData();
+        }
+
+        // Load mining data
+        async function loadMiningData() {
+            document.getElementById('loading').classList.add('active');
+            
+            try {
+                // Get active plan
+                const { data: plan } = await supabase
+                    .from('plan_purchases')
+                    .select(`
+                        *,
+                        plans (*)
+                    `)
+                    .eq('user_id', user.id)
+                    .eq('is_active', true)
+                    .gte('end_date', new Date().toISOString())
+                    .single();
+                
+                activePlan = plan;
+                
+                // Get active mining session
+                const { data: session } = await supabase
+                    .from('mining_sessions')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .eq('status', 'active')
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .single();
+                
+                activeSession = session;
+                
+                // Get today's sessions
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                const { data: todaySessions } = await supabase
+                    .from('mining_sessions')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .gte('created_at', today.toISOString())
+                    .eq('status', 'completed');
+                
+                totalSessionsToday = todaySessions?.length || 0;
+                
+                // Get today's earnings
+                let todayEarnings = 0;
+                if (todaySessions) {
+                    todayEarnings = todaySessions.reduce((sum, session) => sum + (session.earnings || 0), 0);
+                }
+                
+                // Get active booster
+                const { data: booster } = await supabase
+                    .from('booster_purchases')
+                    .select(`
+                        *,
+                        boosters (*)
+                    `)
+                    .eq('user_id', user.id)
+                    .eq('is_active', true)
+                    .gte('end_time', new Date().toISOString())
+                    .single();
+                
+                activeBooster = booster;
+                
+                // Get recent sessions for list
+                const { data: recentSessions } = await supabase
+                    .from('mining_sessions')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+                
+                // Update UI
+                updateUI(plan, session, todayEarnings, todaySessions, booster, recentSessions);
+                
+                // Setup timer if session is active
+                if (session) {
+                    setupMiningTimer(session);
+                }
+                
+            } catch (error) {
+                console.error('Error loading mining data:', error);
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+            }
+        }
+
+        // Update UI
+        function updateUI(plan, session, todayEarnings, todaySessions, booster, recentSessions) {
+            // Update stats
+            document.getElementById('todayEarnings').textContent = `₹${todayEarnings.toFixed(2)}`;
+            
+            const maxSessions = plan?.plans?.mining_per_day || 4;
+            document.getElementById('sessionsToday').textContent = `${totalSessionsToday}/${maxSessions}`;
+            
+            const multiplier = booster?.boosters?.multiplier || 1.0;
+            document.getElementById('boosterActive').textContent = `${multiplier.toFixed(1)}x`;
+            document.getElementById('boosterMultiplier').textContent = `${multiplier.toFixed(1)}x`;
+            
+            const baseEarning = 0.5;
+            const sessionEarning = baseEarning * multiplier;
+            document.getElementById('nextSession').textContent = `₹${sessionEarning.toFixed(2)}`;
+            
+            // Update booster info
+            if (booster) {
+                document.getElementById('boosterBadge').textContent = booster.boosters.name;
+                
+                // Calculate booster time left
+                const endTime = new Date(booster.end_time);
+                const now = new Date();
+                const hoursLeft = Math.max(0, Math.ceil((endTime - now) / (1000 * 60 * 60)));
+                document.getElementById('boosterTime').textContent = `${hoursLeft} hours`;
+                
+                // Calculate extra earnings from booster
+                const extra = (multiplier - 1) * baseEarning * totalSessionsToday;
+                document.getElementById('boosterExtra').textContent = `+₹${extra.toFixed(2)}`;
+            } else {
+                document.getElementById('boosterBadge').textContent = 'No Booster';
+                document.getElementById('boosterTime').textContent = 'Not Active';
+                document.getElementById('boosterExtra').textContent = '₹0.00';
+            }
+            
+            // Update mining button and timer
+            const miningButton = document.getElementById('miningButton');
+            const circularTimer = document.getElementById('circularTimer');
+            
+            if (session) {
+                // Active session
+                miningButton.classList.add('active');
+                miningButton.classList.remove('disabled');
+                miningButton.innerHTML = `
+                    <i class="fas fa-stop"></i>
+                    <span>Stop Mining</span>
+                    <div style="font-size: 16px; margin-top: 10px; opacity: 0.8;">
+                        Session in progress
+                    </div>
+                `;
+                circularTimer.style.display = 'block';
+                miningButton.style.display = 'none';
+            } else {
+                // No active session
+                miningButton.classList.remove('active');
+                circularTimer.style.display = 'none';
+                miningButton.style.display = 'flex';
+                
+                if (totalSessionsToday >= (plan?.plans?.mining_per_day || 4)) {
+                    miningButton.classList.add('disabled');
+                    miningButton.innerHTML = `
+                        <i class="fas fa-ban"></i>
+                        <span>Daily Limit Reached</span>
+                        <div style="font-size: 16px; margin-top: 10px; opacity: 0.8;">
+                        Come back tomorrow
+                        </div>
+                    `;
+                } else if (!plan) {
+                    miningButton.classList.add('disabled');
+                    miningButton.innerHTML = `
+                        <i class="fas fa-crown"></i>
+                        <span>No Active Plan</span>
+                        <div style="font-size: 16px; margin-top: 10px; opacity: 0.8;">
+                        Buy a plan to start mining
+                        </div>
+                    `;
+                } else {
+                    miningButton.classList.remove('disabled');
+                    miningButton.innerHTML = `
+                        <i class="fas fa-play"></i>
+                        <span>Start Mining</span>
+                        <div style="font-size: 16px; margin-top: 10px; opacity: 0.8;">
+                        Click to start 90-minute session
+                        </div>
+                    `;
+                }
+            }
+            
+            // Update sessions list
+            updateSessionsList(recentSessions);
+        }
+
+        // Setup mining timer
+        function setupMiningTimer(session) {
+            if (!session) return;
+            
+            const startTime = new Date(session.start_time);
+            const duration = 90 * 60 * 1000; // 90 minutes in milliseconds
+            const endTime = new Date(startTime.getTime() + duration);
+            
+            function updateTimer() {
+                const now = new Date();
+                const remaining = endTime - now;
+                
+                if (remaining <= 0) {
+                    clearInterval(miningTimer);
+                    document.getElementById('timerDisplay').textContent = '00:00:00';
+                    updateProgress(100);
+                    showNotification('Mining session completed! Earnings added to wallet.');
+                    completeMiningSession();
+                    return;
+                }
+                
+                const hours = Math.floor(remaining / (1000 * 60 * 60));
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                
+                document.getElementById('timerDisplay').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                const progress = ((duration - remaining) / duration) * 100;
+                updateProgress(progress);
+            }
+            
+            function updateProgress(percent) {
+                const circle = document.querySelector('.timer-progress');
+                const radius = 54;
+                const circumference = 2 * Math.PI * radius;
+                const offset = circumference - (percent / 100) * circumference;
+                circle.style.strokeDashoffset = offset;
+            }
+            
+            updateTimer();
+            miningTimer = setInterval(updateTimer, 1000);
+        }
+
+        // Update sessions list
+        function updateSessionsList(sessions) {
+            const container = document.getElementById('sessionsList');
+            
+            if (!sessions || sessions.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                        <i class="fas fa-clock fa-2x" style="margin-bottom: 10px;"></i>
+                        <p>No mining sessions yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            sessions.forEach(session => {
+                const sessionDate = new Date(session.created_at);
+                const timeStr = sessionDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const dateStr = sessionDate.toLocaleDateString();
+                
+                const sessionDiv = document.createElement('div');
+                sessionDiv.className = 'session-item';
+                
+                let statusBadge = '';
+                if (session.status === 'active') {
+                    statusBadge = '<div class="session-status">Active</div>';
+                } else if (session.status === 'completed') {
+                    statusBadge = `<div class="session-status" style="background: rgba(16, 185, 129, 0.2); color: var(--accent);">Completed</div>`;
+                }
+                
+                sessionDiv.innerHTML = `
+                    <div>
+                        <div style="font-weight: 600;">${dateStr}</div>
+                        <div class="session-time">${timeStr}</div>
+                    </div>
+                    <div class="session-amount">₹${session.earnings?.toFixed(2) || '0.00'}</div>
+                    ${statusBadge}
+                `;
+                
+                container.appendChild(sessionDiv);
+            });
+        }
+
+        // Mining button click handler
+        document.getElementById('miningButton').addEventListener('click', async function() {
+            if (this.classList.contains('disabled')) {
+                if (!activePlan) {
+                    window.location.href = 'plans.html';
+                }
+                return;
+            }
+            
+            if (activeSession) {
+                // Stop mining
+                if (confirm('Are you sure you want to stop mining? You will not earn from this session.')) {
+                    await stopMiningSession();
+                }
+            } else {
+                // Start mining
+                await startMiningSession();
+            }
+        });
+
+        // Start mining session
+        async function startMiningSession() {
+            try {
+                // Check if user has reached daily limit
+                if (totalSessionsToday >= (activePlan?.plans?.mining_per_day || 4)) {
+                    showNotification('Daily mining limit reached!', 'error');
+                    return;
+                }
+                
+                // Call edge function to start mining
+                const response = await fetch('https://qvbvgpzmwomtcvejkibs.supabase.co/functions/v1/startMining', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${supabaseKey}`
+                    },
+                    body: JSON.stringify({
+                        user_id: user.id
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    showNotification(result.error, 'error');
+                    return;
+                }
+                
+                showNotification('Mining session started! Session will complete in 90 minutes.');
+                await loadMiningData(); // Reload data
+                
+            } catch (error) {
+                console.error('Error starting mining:', error);
+                showNotification('Failed to start mining session', 'error');
+            }
+        }
+
+        // Stop mining session
+        async function stopMiningSession() {
+            try {
+                await supabase
+                    .from('mining_sessions')
+                    .update({ status: 'cancelled' })
+                    .eq('id', activeSession.id);
+                
+                showNotification('Mining session stopped');
+                await loadMiningData(); // Reload data
+                
+            } catch (error) {
+                console.error('Error stopping mining:', error);
+                showNotification('Failed to stop mining session', 'error');
+            }
+        }
+
+        // Complete mining session
+        async function completeMiningSession() {
+            try {
+                // Call edge function to complete mining
+                const response = await fetch('https://qvbvgpzmwomtcvejkibs.supabase.co/functions/v1/completeMining', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${supabaseKey}`
+                    },
+                    body: JSON.stringify({
+                        session_id: activeSession.id,
+                        user_id: user.id
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(`Earned ₹${result.earnings.toFixed(2)} from mining session!`);
+                    await loadMiningData(); // Reload data
+                }
+                
+            } catch (error) {
+                console.error('Error completing mining:', error);
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            
+            text.textContent = message;
+            
+            if (type === 'error') {
+                notification.style.background = 'rgba(239, 68, 68, 0.9)';
+                notification.innerHTML = `<i class="fas fa-exclamation-circle"></i> <span>${message}</span>`;
+            } else {
+                notification.style.background = 'rgba(16, 185, 129, 0.9)';
+                notification.innerHTML = `<i class="fas fa-check-circle"></i> <span>${message}</span>`;
+            }
+            
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Real-time updates
+        function setupRealtime() {
+            const channel = supabase.channel('mining_updates')
+                .on('postgres_changes', 
+                    { 
+                        event: '*', 
+                        schema: 'public', 
+                        table: 'mining_sessions',
+                        filter: `user_id=eq.${user.id}`
+                    }, 
+                    () => {
+                        loadMiningData(); // Reload when sessions change
+                    }
+                )
+                .subscribe();
+        }
+
+        // Initialize
+        checkAuth().then(() => {
+            setupRealtime();
+        });
+    </script>
+</body>
+</html>

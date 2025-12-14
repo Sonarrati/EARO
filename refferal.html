@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral - EARO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #10b981;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        /* Referral Overview */
+        .referral-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .overview-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .overview-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: var(--gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .overview-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .overview-label {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* Referral Code */
+        .referral-code-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .referral-code {
+            background: rgba(255, 255, 255, 0.07);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: white;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .share-btn.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .share-btn.telegram {
+            background: #0088cc;
+            color: white;
+        }
+
+        .share-btn.copy {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Commission Structure */
+        .commission-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: white;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .commission-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .level-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .level-card:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .level-number {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 15px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        .level-percentage {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .level-label {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* Referral Tree */
+        .tree-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .tree-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .tree-search {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .tree-search input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .tree-search i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .tree-filters {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tree-filter {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .tree-filter.active {
+            background: var(--gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tree-container {
+            min-height: 300px;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .tree-node {
+            display: inline-block;
+            vertical-align: top;
+            margin: 20px;
+            text-align: center;
+        }
+
+        .node-avatar {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .node-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 10px;
+            min-width: 150px;
+        }
+
+        .node-name {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .node-status {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        .node-status.active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+        }
+
+        .node-status.inactive {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .node-earnings {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Tree Lines */
+        .tree-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .tree-line {
+            position: absolute;
+            border-top: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        /* Referral History */
+        .history-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--glass-border);
+            transition: background 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .history-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .history-details h4 {
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .history-details p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .history-amount {
+            text-align: right;
+        }
+
+        .history-amount .amount {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .history-amount .level {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 12px;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+        }
+
+        .nav-item:hover {
+            color: white;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .share-buttons {
+                flex-direction: column;
+            }
+            
+            .tree-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .tree-filters {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .referral-code {
+                font-size: 18px;
+                word-break: break-all;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">EARO</div>
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Loading referral data...</p>
+        </div>
+
+        <!-- Referral Overview -->
+        <div class="referral-overview">
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="overview-value" id="totalReferrals">0</div>
+                <div class="overview-label">Total Referrals</div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <div class="overview-value" id="totalEarnings">₹0</div>
+                <div class="overview-label">Total Earnings</div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="overview-value" id="activeReferrals">0</div>
+                <div class="overview-label">Active Referrals</div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-calendar"></i>
+                </div>
+                <div class="overview-value" id="todayEarnings">₹0</div>
+                <div class="overview-label">Today's Earnings</div>
+            </div>
+        </div>
+
+        <!-- Referral Code Section -->
+        <div class="referral-code-section">
+            <h2 style="color: white; margin-bottom: 10px;">Your Referral Code</h2>
+            <p style="color: #94a3b8; margin-bottom: 20px;">Share this code with friends and earn up to 1% commission on their earnings!</p>
+            
+            <div class="referral-code" id="referralCode">EARO-XXXXXX</div>
+            
+            <div class="share-buttons">
+                <button class="share-btn whatsapp" onclick="shareViaWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> Share on WhatsApp
+                </button>
+                <button class="share-btn telegram" onclick="shareViaTelegram()">
+                    <i class="fab fa-telegram"></i> Share on Telegram
+                </button>
+                <button class="share-btn copy" onclick="copyReferralCode()">
+                    <i class="fas fa-copy"></i> Copy Code
+                </button>
+            </div>
+            
+            <div style="margin-top: 25px; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 10px;">
+                <p style="color: #10b981; margin: 0;">
+                    <i class="fas fa-gift"></i> 
+                    <strong>Referral Bonus:</strong> Get ₹10 bonus when your referral recharges ₹99 or more!
+                </p>
+            </div>
+        </div>
+
+        <!-- Commission Structure -->
+        <div class="commission-section">
+            <h2 class="section-title"><i class="fas fa-sitemap"></i> Commission Structure</h2>
+            <p style="color: #94a3b8; margin-bottom: 30px;">Earn commissions from up to 5 levels of your referral network</p>
+            
+            <div class="commission-levels">
+                <div class="level-card">
+                    <div class="level-number">1</div>
+                    <div class="level-percentage">0.5%</div>
+                    <div class="level-label">Direct Referrals</div>
+                </div>
+                
+                <div class="level-card">
+                    <div class="level-number">2</div>
+                    <div class="level-percentage">0.2%</div>
+                    <div class="level-label">Second Level</div>
+                </div>
+                
+                <div class="level-card">
+                    <div class="level-number">3</div>
+                    <div class="level-percentage">0.15%</div>
+                    <div class="level-label">Third Level</div>
+                </div>
+                
+                <div class="level-card">
+                    <div class="level-number">4</div>
+                    <div class="level-percentage">0.1%</div>
+                    <div class="level-label">Fourth Level</div>
+                </div>
+                
+                <div class="level-card">
+                    <div class="level-number">5</div>
+                    <div class="level-percentage">0.05%</div>
+                    <div class="level-label">Fifth Level</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referral Tree -->
+        <div class="tree-section">
+            <div class="tree-controls">
+                <h2 class="section-title"><i class="fas fa-network-wired"></i> Your Referral Tree</h2>
+                
+                <div class="tree-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="treeSearch" placeholder="Search referrals...">
+                </div>
+                
+                <div class="tree-filters">
+                    <div class="tree-filter active" onclick="filterTree('all')">All</div>
+                    <div class="tree-filter" onclick="filterTree('active')">Active</div>
+                    <div class="tree-filter" onclick="filterTree('inactive')">Inactive</div>
+                </div>
+            </div>
+            
+            <div class="tree-container" id="treeContainer">
+                <!-- Tree will be loaded here -->
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <h3>No referrals yet</h3>
+                    <p>Share your referral code to build your network</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referral History -->
+        <div class="history-section">
+            <h2 class="section-title"><i class="fas fa-history"></i> Referral Earnings History</h2>
+            
+            <div class="history-list" id="historyList">
+                <!-- History will be loaded here -->
+                <div class="empty-state" style="padding: 40px;">
+                    <i class="fas fa-receipt"></i>
+                    <p>No referral earnings yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="mining.html" class="nav-item">
+            <i class="fas fa-digging"></i>
+            <span>Mining</span>
+        </a>
+        <a href="plans.html" class="nav-item">
+            <i class="fas fa-gem"></i>
+            <span>Plans</span>
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+        <a href="referral.html" class="nav-item active">
+            <i class="fas fa-users"></i>
+            <span>Referral</span>
+        </a>
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase configuration
+        const supabaseUrl = 'https://qvbvgpzmwomtcvejkibs.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YnZncHptd29tdGN2ZWpraWJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NjE1NDksImV4cCI6MjA4MTEzNzU0OX0.B7ED7dNB3Gdkq8mw20Y5iTixqvxl73UJYTHgKyLfSLs';
+        
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Global variables
+        let user = null;
+        let userProfile = null;
+        let referrals = [];
+        let referralTree = [];
+
+        // Check authentication
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+            user = session.user;
+            await loadReferralData();
+        }
+
+        // Load referral data
+        async function loadReferralData() {
+            document.getElementById('loading').classList.add('active');
+            
+            try {
+                // Get user profile
+                const { data: profile } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                userProfile = profile;
+                
+                // Get referrals (users who used this user's referral code)
+                const { data: directReferrals } = await supabase
+                    .from('user_profiles')
+                    .select(`
+                        *,
+                        wallets (*)
+                    `)
+                    .eq('referrer_id', profile.id);
+                
+                referrals = directReferrals || [];
+                
+                // Get referral transactions (earnings)
+                const { data: referralEarnings } = await supabase
+                    .from('referral_transactions')
+                    .select('*')
+                    .eq('referrer_id', profile.id)
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+                
+                // Get today's earnings
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                const { data: todayEarnings } = await supabase
+                    .from('referral_transactions')
+                    .select('amount')
+                    .eq('referrer_id', profile.id)
+                    .gte('created_at', today.toISOString());
+                
+                // Calculate totals
+                const totalReferrals = referrals.length;
+                const activeReferrals = referrals.filter(r => r.wallets?.total_earned > 0).length;
+                const totalEarnings = referralEarnings?.reduce((sum, tx) => sum + tx.amount, 0) || 0;
+                const todayEarningsTotal = todayEarnings?.reduce((sum, tx) => sum + tx.amount, 0) || 0;
+                
+                // Update UI
+                updateUI(profile, totalReferrals, activeReferrals, totalEarnings, todayEarningsTotal);
+                
+                // Build referral tree
+                buildReferralTree(directReferrals);
+                
+                // Load history
+                loadHistory(referralEarnings);
+                
+            } catch (error) {
+                console.error('Error loading referral data:', error);
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+            }
+        }
+
+        // Update UI
+        function updateUI(profile, totalReferrals, activeReferrals, totalEarnings, todayEarnings) {
+            // Update overview
+            document.getElementById('totalReferrals').textContent = totalReferrals;
+            document.getElementById('activeReferrals').textContent = activeReferrals;
+            document.getElementById('totalEarnings').textContent = `₹${totalEarnings.toFixed(2)}`;
+            document.getElementById('todayEarnings').textContent = `₹${todayEarnings.toFixed(2)}`;
+            
+            // Update referral code
+            document.getElementById('referralCode').textContent = profile.referral_code || 'EARO-XXXXXX';
+        }
+
+        // Build referral tree
+        function buildReferralTree(directReferrals) {
+            const container = document.getElementById('treeContainer');
+            
+            if (!directReferrals || directReferrals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h3>No referrals yet</h3>
+                        <p>Share your referral code to build your network</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            // Create main user node (center)
+            const mainNode = document.createElement('div');
+            mainNode.className = 'tree-node';
+            mainNode.innerHTML = `
+                <div class="node-avatar" style="background: var(--gradient);">
+                    ${userProfile.full_name ? userProfile.full_name.charAt(0).toUpperCase() : 'Y'}
+                </div>
+                <div class="node-info">
+                    <div class="node-name">You</div>
+                    <div class="node-status active">Active</div>
+                    <div class="node-earnings">${referrals.length} referrals</div>
+                </div>
+            `;
+            container.appendChild(mainNode);
+            
+            // Create referral nodes
+            directReferrals.forEach((referral, index) => {
+                const node = document.createElement('div');
+                node.className = 'tree-node';
+                
+                const isActive = referral.wallets?.total_earned > 0;
+                const earnings = referral.wallets?.total_earned || 0;
+                
+                node.innerHTML = `
+                    <div class="node-avatar" style="background: ${isActive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}; color: ${isActive ? 'var(--accent)' : 'var(--danger)'};">
+                        ${referral.full_name ? referral.full_name.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                    <div class="node-info">
+                        <div class="node-name">${referral.full_name || 'User'}</div>
+                        <div class="node-status ${isActive ? 'active' : 'inactive'}">
+                            ${isActive ? 'Active' : 'Inactive'}
+                        </div>
+                        <div class="node-earnings">₹${earnings.toFixed(2)}</div>
+                    </div>
+                `;
+                
+                // Position nodes in a circle around main node
+                const angle = (index / directReferrals.length) * 2 * Math.PI;
+                const radius = 200;
+                const x = Math.cos(angle) * radius + 200;
+                const y = Math.sin(angle) * radius + 200;
+                
+                node.style.position = 'absolute';
+                node.style.left = `${x}px`;
+                node.style.top = `${y}px`;
+                
+                container.appendChild(node);
+                
+                // Draw line from main node to referral node
+                drawLine(200, 200, x + 75, y + 30);
+            });
+        }
+
+        // Draw line between nodes
+        function drawLine(x1, y1, x2, y2) {
+            const container = document.getElementById('treeContainer');
+            
+            const line = document.createElement('div');
+            line.className = 'tree-line';
+            
+            // Calculate line properties
+            const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+            
+            line.style.width = `${length}px`;
+            line.style.transform = `rotate(${angle}deg)`;
+            line.style.transformOrigin = '0 0';
+            line.style.left = `${x1}px`;
+            line.style.top = `${y1}px`;
+            
+            container.appendChild(line);
+        }
+
+        // Load history
+        function loadHistory(referralEarnings) {
+            const container = document.getElementById('historyList');
+            
+            if (!referralEarnings || referralEarnings.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="padding: 40px;">
+                        <i class="fas fa-receipt"></i>
+                        <p>No referral earnings yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            referralEarnings.forEach(earning => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                
+                const date = new Date(earning.created_at);
+                const dateStr = date.toLocaleDateString();
+                const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                item.innerHTML = `
+                    <div class="history-info">
+                        <div class="history-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="history-details">
+                            <h4>Level ${earning.level} Referral</h4>
+                            <p>${dateStr} • ${timeStr}</p>
+                            <p style="font-size: 12px;">${earning.description || 'Referral commission'}</p>
+                        </div>
+                    </div>
+                    <div class="history-amount">
+                        <div class="amount">+₹${earning.amount.toFixed(2)}</div>
+                        <div class="level">Level ${earning.level}</div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        // Share via WhatsApp
+        function shareViaWhatsApp() {
+            const code = document.getElementById('referralCode').textContent;
+            const message = `Join EARO Mining Platform using my referral code ${code} and start earning! Sign up at ${window.location.origin}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // Share via Telegram
+        function shareViaTelegram() {
+            const code = document.getElementById('referralCode').textContent;
+            const message = `Join EARO Mining Platform using my referral code ${code} and start earning! Sign up at ${window.location.origin}`;
+            const url = `https://t.me/share/url?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // Copy referral code
+        function copyReferralCode() {
+            const code = document.getElementById('referralCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Referral code copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Filter tree
+        function filterTree(filter) {
+            // Update active filter
+            document.querySelectorAll('.tree-filter').forEach(f => {
+                f.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // In a real app, you would filter the tree
+            // For now, we'll just reload
+            loadReferralData();
+        }
+
+        // Search tree
+        document.getElementById('treeSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // In a real app, you would filter the tree based on search term
+        });
+
+        // Real-time updates
+        function setupRealtime() {
+            const channel = supabase.channel('referral_updates')
+                .on('postgres_changes', 
+                    { 
+                        event: '*', 
+                        schema: 'public', 
+                        table: 'referral_transactions',
+                        filter: `referrer_id=eq.${userProfile?.id}`
+                    }, 
+                    () => {
+                        loadReferralData(); // Reload when new referral earnings
+                    }
+                )
+                .subscribe();
+        }
+
+        // Initialize
+        checkAuth().then(() => {
+            if (userProfile) {
+                setupRealtime();
+            }
+        });
+    </script>
+</body>
+  </html>

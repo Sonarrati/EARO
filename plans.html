@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plans - EARO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #10b981;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .balance-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .balance-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .balance-label {
+            color: #94a3b8;
+        }
+
+        .balance-amount {
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .page-header p {
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: #94a3b8;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Plans Grid */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .plan-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+        }
+
+        .plan-card.popular {
+            border: 2px solid var(--primary);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .plan-price {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .plan-price span {
+            font-size: 16px;
+            color: #94a3b8;
+            font-weight: normal;
+        }
+
+        .plan-earning {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding: 10px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .plan-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plan-features li i {
+            color: var(--accent);
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .plan-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .plan-btn.current {
+            background: rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Booster Section */
+        .boosters-section {
+            margin-top: 60px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .boosters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .booster-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .booster-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .booster-multiplier {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .booster-price {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .booster-duration {
+            color: #94a3b8;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .booster-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .booster-btn:hover {
+            background: rgba(99, 102, 241, 0.3);
+        }
+
+        .booster-btn.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: var(--accent);
+        }
+
+        /* Purchase Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--dark);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 30px;
+        }
+
+        .modal-header h3 {
+            font-size: 24px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .modal-header p {
+            color: #94a3b8;
+        }
+
+        .payment-methods {
+            margin-bottom: 30px;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary);
+        }
+
+        .payment-method.active {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .method-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .method-info h4 {
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .method-info p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .upi-input {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .upi-input.active {
+            display: block;
+        }
+
+        .upi-input input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: white;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 12px;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+        }
+
+        .nav-item:hover {
+            color: white;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message.active {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .balance-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .balance-item {
+                align-items: flex-start;
+            }
+            
+            .modal {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">EARO</div>
+            <div class="balance-info">
+                <div class="balance-item">
+                    <div class="balance-label">Main Balance</div>
+                    <div class="balance-amount" id="mainBalance">₹0.00</div>
+                </div>
+                <div class="balance-item">
+                    <div class="balance-label">Purchase Balance</div>
+                    <div class="balance-amount" id="purchaseBalance">₹0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-gem"></i> Upgrade Your Plan</h1>
+            <p>Choose from our premium plans to maximize your earnings. Higher plans offer more daily sessions and higher earning caps.</p>
+        </div>
+
+        <!-- Current Plan Info -->
+        <div class="success-message" id="currentPlanMessage">
+            <i class="fas fa-crown"></i>
+            <div>
+                <strong>Current Plan:</strong> <span id="currentPlanName">No Plan</span> - 
+                <span id="currentPlanStatus">Expired</span>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Loading plans...</p>
+        </div>
+
+        <!-- Plans Grid -->
+        <div class="plans-grid" id="plansGrid">
+            <!-- Plans will be loaded here -->
+        </div>
+
+        <!-- Boosters Section -->
+        <div class="boosters-section">
+            <h2 class="section-title"><i class="fas fa-bolt"></i> Boost Your Earnings</h2>
+            <p style="color: #94a3b8; margin-bottom: 30px; max-width: 800px;">
+                Boosters temporarily increase your mining speed. They work with any plan and don't extend plan duration.
+            </p>
+            
+            <div class="boosters-grid" id="boostersGrid">
+                <!-- Boosters will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Purchase Modal -->
+    <div class="modal-overlay" id="purchaseModal">
+        <div class="modal">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            
+            <div class="modal-header">
+                <h3 id="modalTitle">Purchase Plan</h3>
+                <p id="modalDescription">Complete your purchase</p>
+            </div>
+            
+            <div class="payment-methods">
+                <div class="payment-method active" onclick="selectPayment('wallet')">
+                    <div class="method-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="method-info">
+                        <h4>Wallet Balance</h4>
+                        <p>Use your available balance</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" onclick="selectPayment('upi')">
+                    <div class="method-icon">
+                        <i class="fas fa-rupee-sign"></i>
+                    </div>
+                    <div class="method-info">
+                        <h4>UPI Payment</h4>
+                        <p>Pay via UPI (Google Pay, PhonePe, etc.)</p>
+                    </div>
+                </div>
+                
+                <div class="upi-input" id="upiInput">
+                    <input type="text" id="upiId" placeholder="Enter your UPI ID (example@upi)">
+                    <small style="color: #94a3b8; display: block; margin-top: 5px;">
+                        After clicking confirm, you'll be redirected to your UPI app
+                    </small>
+                </div>
+            </div>
+            
+            <div style="margin: 30px 0; padding: 20px; background: var(--glass); border-radius: 15px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color: #94a3b8;">Item:</span>
+                    <span style="font-weight: 600; color: white;" id="modalItemName"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color: #94a3b8;">Price:</span>
+                    <span style="font-weight: 600; color: white;" id="modalPrice"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color: #94a3b8;">Tax (18%):</span>
+                    <span style="font-weight: 600; color: white;" id="modalTax"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--glass-border);">
+                    <span style="color: #94a3b8;">Total:</span>
+                    <span style="font-size: 20px; font-weight: 700; color: var(--accent);" id="modalTotal"></span>
+                </div>
+            </div>
+            
+            <button class="confirm-btn" onclick="confirmPurchase()">
+                <i class="fas fa-lock"></i> Confirm Purchase
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="mining.html" class="nav-item">
+            <i class="fas fa-digging"></i>
+            <span>Mining</span>
+        </a>
+        <a href="plans.html" class="nav-item active">
+            <i class="fas fa-gem"></i>
+            <span>Plans</span>
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase configuration
+        const supabaseUrl = 'https://qvbvgpzmwomtcvejkibs.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YnZncHptd29tdGN2ZWpraWJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NjE1NDksImV4cCI6MjA4MTEzNzU0OX0.B7ED7dNB3Gdkq8mw20Y5iTixqvxl73UJYTHgKyLfSLs';
+        
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Global variables
+        let user = null;
+        let currentPlan = null;
+        let activeBooster = null;
+        let selectedPlan = null;
+        let selectedBooster = null;
+        let selectedPayment = 'wallet';
+        let purchaseType = 'plan'; // 'plan' or 'booster'
+
+        // Check authentication
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+            user = session.user;
+            await loadData();
+        }
+
+        // Load data
+        async function loadData() {
+            document.getElementById('loading').classList.add('active');
+            
+            try {
+                // Get user wallet
+                const { data: wallet } = await supabase
+                    .from('wallets')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                // Get current plan
+                const { data: plan } = await supabase
+                    .from('plan_purchases')
+                    .select(`
+                        *,
+                        plans (*)
+                    `)
+                    .eq('user_id', user.id)
+                    .eq('is_active', true)
+                    .gte('end_date', new Date().toISOString())
+                    .single();
+                
+                currentPlan = plan;
+                
+                // Get active booster
+                const { data: booster } = await supabase
+                    .from('booster_purchases')
+                    .select(`
+                        *,
+                        boosters (*)
+                    `)
+                    .eq('user_id', user.id)
+                    .eq('is_active', true)
+                    .gte('end_time', new Date().toISOString())
+                    .single();
+                
+                activeBooster = booster;
+                
+                // Get all plans
+                const { data: plans } = await supabase
+                    .from('plans')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('price', { ascending: true });
+                
+                // Get all boosters
+                const { data: boosters } = await supabase
+                    .from('boosters')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('price', { ascending: true });
+                
+                // Update UI
+                updateUI(wallet, plan, booster, plans, boosters);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+            }
+        }
+
+        // Update UI
+        function updateUI(wallet, plan, booster, plans, boosters) {
+            // Update balances
+            document.getElementById('mainBalance').textContent = `₹${wallet?.main_balance?.toFixed(2) || '0.00'}`;
+            document.getElementById('purchaseBalance').textContent = `₹${wallet?.purchase_balance?.toFixed(2) || '0.00'}`;
+            
+            // Update current plan info
+            if (plan) {
+                document.getElementById('currentPlanMessage').classList.add('active');
+                document.getElementById('currentPlanName').textContent = plan.plans.name;
+                
+                const endDate = new Date(plan.end_date);
+                const today = new Date();
+                const daysLeft = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+                document.getElementById('currentPlanStatus').textContent = `${daysLeft} days left`;
+            }
+            
+            // Render plans
+            renderPlans(plans, plan);
+            
+            // Render boosters
+            renderBoosters(boosters, booster);
+        }
+
+        // Render plans
+        function renderPlans(plans, currentPlan) {
+            const container = document.getElementById('plansGrid');
+            container.innerHTML = '';
+            
+            if (!plans || plans.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #94a3b8;">
+                        <i class="fas fa-gem fa-2x" style="margin-bottom: 10px;"></i>
+                        <p>No plans available at the moment</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            plans.forEach((plan, index) => {
+                const isCurrentPlan = currentPlan?.plans?.id === plan.id;
+                const isPopular = index === 2; // Mark Gold plan as popular
+                
+                const planCard = document.createElement('div');
+                planCard.className = `plan-card ${isPopular ? 'popular' : ''}`;
+                
+                if (isPopular) {
+                    planCard.innerHTML = `<div class="popular-badge">Most Popular</div>`;
+                }
+                
+                const displayEarning = plan.display_earning_range || `₹${plan.real_cap_max}`;
+                const dailyEarning = (plan.real_cap_max / plan.days).toFixed(2);
+                
+                let buttonHTML = '';
+                if (isCurrentPlan) {
+                    buttonHTML = `<button class="plan-btn current" disabled>
+                        <i class="fas fa-check-circle"></i> Current Plan
+                    </button>`;
+                } else {
+                    buttonHTML = `<button class="plan-btn" onclick="selectPlan('${plan.id}')">
+                        <i class="fas fa-shopping-cart"></i> Buy Now
+                    </button>`;
+                }
+                
+                planCard.innerHTML += `
+                    <div class="plan-name">${plan.name} Plan</div>
+                    <div class="plan-price">₹${plan.price}<span>/one-time</span></div>
+                    <div class="plan-earning">
+                        <i class="fas fa-money-bill-wave"></i> 
+                        Earn ${displayEarning}
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-calendar"></i> ${plan.days} Days Validity</li>
+                        <li><i class="fas fa-bolt"></i> ${plan.mining_per_day} Sessions/Day</li>
+                        <li><i class="fas fa-chart-line"></i> ₹${dailyEarning} Daily Average</li>
+                        <li><i class="fas fa-users"></i> Referral Program Enabled</li>
+                        <li><i class="fas fa-download"></i> Withdrawal Enabled</li>
+                    </ul>
+                    ${buttonHTML}
+                `;
+                
+                container.appendChild(planCard);
+            });
+        }
+
+        // Render boosters
+        function renderBoosters(boosters, activeBooster) {
+            const container = document.getElementById('boostersGrid');
+            container.innerHTML = '';
+            
+            if (!boosters || boosters.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #94a3b8;">
+                        <i class="fas fa-bolt fa-2x" style="margin-bottom: 10px;"></i>
+                        <p>No boosters available at the moment</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            boosters.forEach(booster => {
+                const isActive = activeBooster?.boosters?.id === booster.id;
+                
+                const boosterCard = document.createElement('div');
+                boosterCard.className = 'booster-card';
+                
+                let buttonHTML = '';
+                if (isActive) {
+                    buttonHTML = `<button class="booster-btn active" disabled>
+                        <i class="fas fa-check-circle"></i> Active
+                    </button>`;
+                } else {
+                    buttonHTML = `<button class="booster-btn" onclick="selectBooster('${booster.id}')">
+                        <i class="fas fa-bolt"></i> Activate Now
+                    </button>`;
+                }
+                
+                boosterCard.innerHTML = `
+                    <div class="booster-name">${booster.name}</div>
+                    <div class="booster-multiplier">${booster.multiplier.toFixed(1)}x</div>
+                    <div class="booster-price">₹${booster.price}</div>
+                    <div class="booster-duration">
+                        <i class="fas fa-clock"></i> ${booster.duration_hours} Hours
+                    </div>
+                    ${buttonHTML}
+                `;
+                
+                container.appendChild(boosterCard);
+            });
+        }
+
+        // Select plan for purchase
+        function selectPlan(planId) {
+            // First check if user has an active plan
+            if (currentPlan) {
+                if (!confirm('You already have an active plan. Buying a new plan will replace your current plan. Continue?')) {
+                    return;
+                }
+            }
+            
+            // Get plan details
+            supabase
+                .from('plans')
+                .select('*')
+                .eq('id', planId)
+                .single()
+                .then(({ data: plan }) => {
+                    selectedPlan = plan;
+                    selectedBooster = null;
+                    purchaseType = 'plan';
+                    
+                    openPurchaseModal(plan);
+                });
+        }
+
+        // Select booster for purchase
+        function selectBooster(boosterId) {
+            // Check if user has an active plan
+            if (!currentPlan) {
+                alert('You need an active plan to use boosters!');
+                window.location.href = '#plans';
+                return;
+            }
+            
+            // Get booster details
+            supabase
+                .from('boosters')
+                .select('*')
+                .eq('id', boosterId)
+                .single()
+                .then(({ data: booster }) => {
+                    selectedBooster = booster;
+                    selectedPlan = null;
+                    purchaseType = 'booster';
+                    
+                    openPurchaseModal(booster);
+                });
+        }
+
+        // Open purchase modal
+        function openPurchaseModal(item) {
+            const modal = document.getElementById('purchaseModal');
+            const isPlan = purchaseType === 'plan';
+            
+            document.getElementById('modalTitle').textContent = 
+                isPlan ? `Purchase ${item.name} Plan` : `Activate ${item.name} Booster`;
+            document.getElementById('modalDescription').textContent = 
+                isPlan ? 'Complete payment to activate your plan' : 'Complete payment to activate your booster';
+            document.getElementById('modalItemName').textContent = 
+                isPlan ? `${item.name} Plan (${item.days} days)` : `${item.name} Booster (${item.multiplier}x for ${item.duration_hours} hours)`;
+            document.getElementById('modalPrice').textContent = `₹${item.price}`;
+            
+            const tax = item.price * 0.18;
+            const total = item.price + tax;
+            
+            document.getElementById('modalTax').textContent = `₹${tax.toFixed(2)}`;
+            document.getElementById('modalTotal').textContent = `₹${total.toFixed(2)}`;
+            
+            modal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('purchaseModal').classList.remove('active');
+            selectedPlan = null;
+            selectedBooster = null;
+            selectedPayment = 'wallet';
+            document.getElementById('upiInput').classList.remove('active');
+        }
+
+        // Select payment method
+        function selectPayment(method) {
+            selectedPayment = method;
+            
+            // Update UI
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Show/hide UPI input
+            const upiInput = document.getElementById('upiInput');
+            if (method === 'upi') {
+                upiInput.classList.add('active');
+            } else {
+                upiInput.classList.remove('active');
+            }
+        }
+
+        // Confirm purchase
+        async function confirmPurchase() {
+            const item = selectedPlan || selectedBooster;
+            const totalAmount = item.price * 1.18; // Including 18% tax
+            
+            // Check payment method
+            if (selectedPayment === 'upi') {
+                const upiId = document.getElementById('upiId').value;
+                if (!upiId || !upiId.includes('@')) {
+                    alert('Please enter a valid UPI ID');
+                    return;
+                }
+                
+                // In a real app, you would redirect to payment gateway
+                // For now, we'll simulate success
+                alert(`Redirecting to UPI payment for ₹${totalAmount.toFixed(2)}...`);
+                
+                // Simulate payment success after 2 seconds
+                setTimeout(async () => {
+                    await processPurchase(item, 'upi', upiId);
+                }, 2000);
+                
+            } else if (selectedPayment === 'wallet') {
+                // Check wallet balance
+                const { data: wallet } = await supabase
+                    .from('wallets')
+                    .select('purchase_balance')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (wallet.purchase_balance < totalAmount) {
+                    alert(`Insufficient balance! You need ₹${totalAmount.toFixed(2)} but have only ₹${wallet.purchase_balance.toFixed(2)}`);
+                    return;
+                }
+                
+                await processPurchase(item, 'wallet');
+            }
+        }
+
+        // Process purchase
+        async function processPurchase(item, paymentMethod, upiId = null) {
+            try {
+                // Update wallet if paid from wallet
+                if (paymentMethod === 'wallet') {
+                    await supabase
+                        .from('wallets')
+                        .update({
+                            purchase_balance: supabase.raw(`purchase_balance - ${item.price * 1.18}`)
+                        })
+                        .eq('user_id', user.id);
+                }
+                
+                if (purchaseType === 'plan') {
+                    // Deactivate any current plan
+                    await supabase
+                        .from('plan_purchases')
+                        .update({ is_active: false })
+                        .eq('user_id', user.id)
+                        .eq('is_active', true);
+                    
+                    // Calculate end date
+                    const startDate = new Date();
+                    const endDate = new Date();
+                    endDate.setDate(endDate.getDate() + item.days);
+                    
+                    // Create new plan purchase
+                    await supabase
+                        .from('plan_purchases')
+                        .insert([{
+                            user_id: user.id,
+                            plan_id: item.id,
+                            amount: item.price,
+                            start_date: startDate.toISOString(),
+                            end_date: endDate.toISOString(),
+                            is_active: true
+                        }]);
+                    
+                    alert(`🎉 ${item.name} Plan activated successfully! You can now start mining.`);
+                    
+                } else if (purchaseType === 'booster') {
+                    // Calculate end time
+                    const startTime = new Date();
+                    const endTime = new Date();
+                    endTime.setHours(endTime.getHours() + item.duration_hours);
+                    
+                    // Deactivate any current booster
+                    await supabase
+                        .from('booster_purchases')
+                        .update({ is_active: false })
+                        .eq('user_id', user.id)
+                        .eq('is_active', true);
+                    
+                    // Create new booster purchase
+                    await supabase
+                        .from('booster_purchases')
+                        .insert([{
+                            user_id: user.id,
+                            booster_id: item.id,
+                            start_time: startTime.toISOString(),
+                            end_time: endTime.toISOString(),
+                            is_active: true
+                        }]);
+                    
+                    alert(`⚡ ${item.name} Booster activated successfully! Your mining speed is now ${item.multiplier}x faster.`);
+                }
+                
+                // Close modal and reload data
+                closeModal();
+                await loadData();
+                
+            } catch (error) {
+                console.error('Error processing purchase:', error);
+                alert('Failed to process purchase. Please try again.');
+            }
+        }
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>

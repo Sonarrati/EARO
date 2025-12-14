@@ -2,24 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - EARO</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EARO - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #8b5cf6;
-            --accent: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --dark: #0f172a;
-            --darker: #020617;
-            --light: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --primary: #0a0a0a;
+            --secondary: #1a1a1a;
+            --accent: #00ff9d;
+            --accent-dark: #00cc7d;
+            --text: #ffffff;
+            --text-secondary: #b0b0b0;
+            --danger: #ff4d4d;
+            --warning: #ffb74d;
+            --info: #4d79ff;
+            --success: #00ff9d;
+            --card-bg: #1a1a1a;
+            --border: #333333;
+            --shadow: 0 8px 32px rgba(0, 255, 157, 0.1);
+            --radius: 16px;
+            --radius-sm: 8px;
         }
 
         * {
@@ -29,11 +35,11 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--darker);
-            color: var(--light);
+            font-family: 'Inter', sans-serif;
+            background: var(--primary);
+            color: var(--text);
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 80px; /* Space for bottom nav */
         }
 
         .container {
@@ -52,150 +58,201 @@
         }
 
         .logo {
+            font-family: 'Poppins', sans-serif;
             font-size: 24px;
-            font-weight: 800;
-            background: var(--gradient);
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent), var(--info));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, var(--accent), var(--info));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
         }
 
         .user-info {
             display: flex;
-            align-items: center;
-            gap: 15px;
+            flex-direction: column;
         }
 
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
+        .user-name {
             font-weight: 600;
+            font-size: 14px;
         }
 
-        /* Balance Cards */
-        .balance-grid {
+        .user-plan {
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, var(--secondary) 0%, #222 100%);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 100% 0%, rgba(0, 255, 157, 0.1) 0%, transparent 50%);
+        }
+
+        .balance-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .balance-amount {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .balance-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .balance-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
 
-        .balance-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
-            transition: all 0.3s ease;
-        }
-
-        .balance-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-5px);
-        }
-
-        .balance-card h3 {
-            font-size: 14px;
-            color: #94a3b8;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .balance-amount {
-            font-size: 32px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 5px;
-        }
-
-        .balance-change {
-            font-size: 14px;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
         .stat-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
-        }
-
-        .stat-card h3 {
-            font-size: 16px;
-            color: #94a3b8;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .chart-container {
-            height: 200px;
-            position: relative;
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .action-btn {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
             padding: 20px;
-            text-align: center;
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .stat-header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
+            margin-bottom: 12px;
         }
 
-        .action-btn:hover {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: var(--primary);
-            transform: translateY(-5px);
+        .stat-title {
+            font-size: 14px;
+            color: var(--text-secondary);
         }
 
-        .action-btn i {
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 255, 157, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .stat-value {
             font-size: 24px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-trend {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-trend.positive {
+            color: var(--success);
+        }
+
+        .stat-trend.negative {
+            color: var(--danger);
         }
 
         /* Plan Status */
         .plan-status {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
             margin-bottom: 30px;
+            border: 1px solid var(--border);
         }
 
         .plan-header {
@@ -205,105 +262,86 @@
             margin-bottom: 20px;
         }
 
-        .plan-header h3 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-        }
-
-        .plan-badge {
-            background: var(--gradient);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
+        .plan-title {
+            font-size: 18px;
             font-weight: 600;
         }
 
-        .plan-progress {
-            margin-bottom: 20px;
+        .plan-badge {
+            padding: 6px 12px;
+            background: var(--accent);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .plan-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .plan-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plan-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .plan-value {
+            font-size: 16px;
+            font-weight: 600;
         }
 
         .progress-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-top: 12px;
             overflow: hidden;
-            margin-bottom: 10px;
         }
 
         .progress-fill {
             height: 100%;
-            background: var(--gradient);
-            border-radius: 4px;
-            transition: width 0.3s ease;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.3s;
         }
 
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            color: #94a3b8;
-            font-size: 14px;
-        }
-
-        .plan-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #94a3b8;
-        }
-
-        .feature-item i {
-            color: var(--accent);
-        }
-
-        /* Mining Status */
-        .mining-status {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
+        /* Charts Section */
+        .charts-section {
             margin-bottom: 30px;
-            text-align: center;
         }
 
-        .mining-timer {
-            font-size: 48px;
-            font-weight: 700;
-            color: white;
-            margin: 20px 0;
-            font-family: monospace;
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
 
-        .mining-stats {
+        .charts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
-            margin-top: 20px;
         }
 
-        .stat-item {
-            text-align: center;
+        .chart-container {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            border: 1px solid var(--border);
         }
 
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .stat-label {
+        .chart-title {
             font-size: 14px;
-            color: #94a3b8;
-            margin-top: 5px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            text-align: center;
         }
 
         /* Bottom Navigation */
@@ -312,78 +350,122 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
+            background: var(--secondary);
+            border-top: 1px solid var(--border);
+            padding: 12px 0;
             z-index: 1000;
+        }
+
+        .nav-items {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #94a3b8;
+            gap: 4px;
             text-decoration: none;
-            font-size: 12px;
-            gap: 5px;
-            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            padding: 8px;
+            border-radius: var(--radius-sm);
         }
 
         .nav-item.active {
-            color: var(--primary);
+            color: var(--accent);
+            background: rgba(0, 255, 157, 0.1);
         }
 
-        .nav-item i {
+        .nav-item:hover:not(.active) {
+            color: var(--text);
+        }
+
+        .nav-icon {
             font-size: 20px;
         }
 
-        .nav-item:hover {
-            color: white;
+        .nav-label {
+            font-size: 10px;
+            font-weight: 500;
         }
 
-        /* Loading */
+        /* Loading State */
         .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            color: #94a3b8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
         }
 
-        .loading.active {
-            display: block;
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        /* Logout Button */
-        .logout-btn {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            padding: 8px 16px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(239, 68, 68, 0.2);
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
             .balance-amount {
+                font-size: 36px;
+            }
+            
+            .balance-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-items {
+                padding: 0 10px;
+            }
+            
+            .nav-label {
+                display: none;
+            }
+            
+            .nav-icon {
                 font-size: 24px;
             }
-            
-            .chart-container {
-                height: 150px;
+        }
+
+        @media (max-width: 480px) {
+            .balance-card {
+                padding: 20px;
             }
             
-            .mining-timer {
-                font-size: 36px;
+            .balance-amount {
+                font-size: 32px;
+            }
+            
+            .plan-details {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -391,412 +473,491 @@
 <body>
     <div class="container">
         <!-- Header -->
-        <div class="header">
+        <header class="header">
             <div class="logo">EARO</div>
-            <div class="user-info">
-                <div class="user-avatar" id="userAvatar">JD</div>
-                <div>
-                    <div id="userName" style="font-weight: 600;"></div>
-                    <div style="font-size: 12px; color: #94a3b8;">Active Plan: <span id="activePlanName">Gold</span></div>
+            <div class="user-profile" id="userProfile">
+                <div class="avatar" id="userAvatar">U</div>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Loading...</div>
+                    <div class="user-plan" id="userPlan">Free Plan</div>
                 </div>
-                <button class="logout-btn" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
+            </div>
+        </header>
+
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-label">Total Balance</div>
+            <div class="balance-amount" id="totalBalance">₹0.00</div>
+            <div class="balance-subtitle">Available for withdrawal: <span id="availableBalance">₹0.00</span></div>
+            <div class="balance-actions">
+                <a href="mining.html" class="btn btn-primary">
+                    ⛏️ Start Mining
+                </a>
+                <a href="wallet.html" class="btn btn-secondary">
+                    💳 Withdraw Funds
+                </a>
             </div>
         </div>
 
-        <!-- Loading -->
-        <div class="loading" id="loading">
-            <i class="fas fa-spinner fa-spin fa-2x"></i>
-            <p>Loading dashboard...</p>
-        </div>
-
-        <!-- Balance Cards -->
-        <div class="balance-grid">
-            <div class="balance-card">
-                <h3><i class="fas fa-wallet"></i> Main Balance</h3>
-                <div class="balance-amount" id="mainBalance">₹0.00</div>
-                <div class="balance-change">
-                    <i class="fas fa-arrow-up"></i>
-                    <span id="todayEarning">+₹0.00 today</span>
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Today's Earnings</div>
+                    <div class="stat-icon">💰</div>
+                </div>
+                <div class="stat-value" id="todayEarnings">₹0.00</div>
+                <div class="stat-trend positive" id="todayTrend">
+                    <span>↑</span> <span>+0%</span>
                 </div>
             </div>
             
-            <div class="balance-card">
-                <h3><i class="fas fa-gift"></i> Bonus Balance</h3>
-                <div class="balance-amount" id="bonusBalance">₹0.00</div>
-                <div class="balance-change">
-                    <i class="fas fa-users"></i>
-                    <span id="referralBonus">From referrals</span>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Mining Sessions</div>
+                    <div class="stat-icon">⏳</div>
+                </div>
+                <div class="stat-value" id="sessionsCount">0/0</div>
+                <div class="stat-trend">
+                    <span id="sessionsStatus">Not Started</span>
                 </div>
             </div>
             
-            <div class="balance-card">
-                <h3><i class="fas fa-chart-line"></i> Total Earned</h3>
-                <div class="balance-amount" id="totalEarned">₹0.00</div>
-                <div class="balance-change">
-                    <i class="fas fa-calendar"></i>
-                    <span id="lifetimeEarnings">Lifetime</span>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Referral Income</div>
+                    <div class="stat-icon">👥</div>
+                </div>
+                <div class="stat-value" id="referralIncome">₹0.00</div>
+                <div class="stat-trend">
+                    <span id="referralCount">0 Members</span>
                 </div>
             </div>
             
-            <div class="balance-card">
-                <h3><i class="fas fa-download"></i> Withdrawn</h3>
-                <div class="balance-amount" id="totalWithdrawn">₹0.00</div>
-                <div class="balance-change">
-                    <i class="fas fa-check-circle"></i>
-                    <span id="withdrawalStatus">Ready to withdraw</span>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Active Booster</div>
+                    <div class="stat-icon">🚀</div>
+                </div>
+                <div class="stat-value" id="boosterStatus">None</div>
+                <div class="stat-trend">
+                    <span id="boosterMultiplier">1.0x</span>
                 </div>
             </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-            <a href="mining.html" class="action-btn">
-                <i class="fas fa-digging"></i>
-                <span>Start Mining</span>
-            </a>
-            <a href="plans.html" class="action-btn">
-                <i class="fas fa-gem"></i>
-                <span>Upgrade Plan</span>
-            </a>
-            <a href="wallet.html" class="action-btn">
-                <i class="fas fa-credit-card"></i>
-                <span>Withdraw</span>
-            </a>
-            <a href="referral.html" class="action-btn">
-                <i class="fas fa-users"></i>
-                <span>Refer & Earn</span>
-            </a>
         </div>
 
         <!-- Plan Status -->
         <div class="plan-status">
             <div class="plan-header">
-                <h3><i class="fas fa-crown"></i> Current Plan</h3>
-                <div class="plan-badge" id="planBadge">Gold Plan</div>
+                <div class="plan-title">Your Plan</div>
+                <div class="plan-badge" id="planBadge">FREE</div>
             </div>
-            
-            <div class="plan-progress">
-                <div class="progress-info">
-                    <span>Plan Duration</span>
-                    <span id="planDaysLeft">30 days left</span>
+            <div class="plan-details">
+                <div class="plan-detail">
+                    <div class="plan-label">Plan Type</div>
+                    <div class="plan-value" id="planType">Free Trial</div>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="planProgress" style="width: 60%"></div>
+                <div class="plan-detail">
+                    <div class="plan-label">Expires In</div>
+                    <div class="plan-value" id="planExpiry">15 days</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="planProgress" style="width: 100%"></div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="plan-features">
-                <div class="feature-item">
-                    <i class="fas fa-bolt"></i>
-                    <span><strong id="dailySessions">10</strong> sessions/day</span>
+                <div class="plan-detail">
+                    <div class="plan-label">Sessions Today</div>
+                    <div class="plan-value" id="planSessions">4/4</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="sessionsProgress" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="feature-item">
-                    <i class="fas fa-calendar"></i>
-                    <span><strong id="planDays">60</strong> days validity</span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>Earn up to <strong id="planCap">₹900</strong></span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-user-plus"></i>
-                    <span>Referral <strong>Enabled</strong></span>
+                <div class="plan-detail">
+                    <div class="plan-label">Earnings Cap</div>
+                    <div class="plan-value" id="earningsCap">₹0/₹0</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="earningsProgress" style="width: 0%"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Charts Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3><i class="fas fa-chart-line"></i> Daily Earnings</h3>
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="section-title">Earnings Statistics</div>
+            <div class="charts-grid">
                 <div class="chart-container">
-                    <canvas id="earningsChart"></canvas>
+                    <div class="chart-title">Daily Earnings (Last 7 Days)</div>
+                    <canvas id="dailyChart"></canvas>
                 </div>
-            </div>
-            
-            <div class="stat-card">
-                <h3><i class="fas fa-clock"></i> Mining Sessions</h3>
                 <div class="chart-container">
-                    <canvas id="sessionsChart"></canvas>
+                    <div class="chart-title">Weekly Earnings</div>
+                    <canvas id="weeklyChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Mining Status -->
-        <div class="mining-status">
-            <h3><i class="fas fa-digging"></i> Mining Status</h3>
-            <div class="mining-timer" id="miningTimer">00:00:00</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="miningProgress" style="width: 0%"></div>
-            </div>
-            
-            <div class="mining-stats">
-                <div class="stat-item">
-                    <div class="stat-value" id="todaySessionsCount">0/10</div>
-                    <div class="stat-label">Today's Sessions</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="sessionEarnings">₹0.50</div>
-                    <div class="stat-label">Per Session</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="boosterMultiplier">1.0x</div>
-                    <div class="stat-label">Booster Active</div>
-                </div>
-            </div>
+        <!-- Loading State -->
+        <div class="loading" id="loading" style="display: none;">
+            <div class="spinner"></div>
         </div>
     </div>
 
     <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-item active">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="mining.html" class="nav-item">
-            <i class="fas fa-digging"></i>
-            <span>Mining</span>
-        </a>
-        <a href="wallet.html" class="nav-item">
-            <i class="fas fa-wallet"></i>
-            <span>Wallet</span>
-        </a>
-        <a href="referral.html" class="nav-item">
-            <i class="fas fa-users"></i>
-            <span>Referral</span>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <i class="fas fa-user"></i>
-            <span>Profile</span>
-        </a>
-    </div>
+    <nav class="bottom-nav">
+        <div class="nav-items">
+            <a href="dashboard.html" class="nav-item active">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="mining.html" class="nav-item">
+                <span class="nav-icon">⛏️</span>
+                <span class="nav-label">Mining</span>
+            </a>
+            <a href="plans.html" class="nav-item">
+                <span class="nav-icon">💎</span>
+                <span class="nav-label">Plans</span>
+            </a>
+            <a href="wallet.html" class="nav-item">
+                <span class="nav-icon">💰</span>
+                <span class="nav-label">Wallet</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </a>
+        </div>
+    </nav>
 
-    <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase configuration
+        // Initialize Supabase
         const supabaseUrl = 'https://qvbvgpzmwomtcvejkibs.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YnZncHptd29tdGN2ZWpraWJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NjE1NDksImV4cCI6MjA4MTEzNzU0OX0.B7ED7dNB3Gdkq8mw20Y5iTixqvxl73UJYTHgKyLfSLs';
         
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
+        
         // Global variables
-        let user = null;
         let userProfile = null;
-        let activePlan = null;
-        let miningSession = null;
-        let miningTimer = null;
-
+        let userPlan = null;
+        let wallets = [];
+        let miningStats = null;
+        let referralStats = null;
+        
         // Check authentication
         async function checkAuth() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
+            const { data: { user }, error } = await supabase.auth.getUser();
+            
+            if (error || !user) {
                 window.location.href = 'login.html';
-                return;
+                return null;
             }
-            user = session.user;
-            await loadUserData();
-        }
-
-        // Load user data
-        async function loadUserData() {
-            document.getElementById('loading').classList.add('active');
             
-            try {
-                // Get user profile
-                const { data: profile } = await supabase
-                    .from('user_profiles')
-                    .select('*')
-                    .eq('user_id', user.id)
-                    .single();
-                
-                userProfile = profile;
-                
-                // Get wallet
-                const { data: wallet } = await supabase
-                    .from('wallets')
-                    .select('*')
-                    .eq('user_id', user.id)
-                    .single();
-                
-                // Get active plan
-                const { data: plan } = await supabase
-                    .from('plan_purchases')
-                    .select(`
-                        *,
-                        plans (*)
-                    `)
-                    .eq('user_id', user.id)
-                    .eq('is_active', true)
-                    .gte('end_date', new Date().toISOString())
-                    .single();
-                
-                activePlan = plan;
-                
-                // Get active mining session
-                const { data: session } = await supabase
-                    .from('mining_sessions')
-                    .select('*')
-                    .eq('user_id', user.id)
-                    .eq('status', 'active')
-                    .order('created_at', { ascending: false })
-                    .limit(1)
-                    .single();
-                
-                miningSession = session;
-                
-                // Get today's sessions
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                const { data: todaySessions } = await supabase
-                    .from('mining_sessions')
-                    .select('id')
-                    .eq('user_id', user.id)
-                    .gte('created_at', today.toISOString())
-                    .eq('status', 'completed');
-                
-                // Get active booster
-                const { data: booster } = await supabase
-                    .from('booster_purchases')
-                    .select(`
-                        *,
-                        boosters (*)
-                    `)
-                    .eq('user_id', user.id)
-                    .eq('is_active', true)
-                    .gte('end_time', new Date().toISOString())
-                    .single();
-                
-                // Update UI
-                updateUI(profile, wallet, plan, session, todaySessions, booster);
-                
-                // Load charts
-                loadCharts();
-                
-                // Start mining timer if session is active
-                if (session) {
-                    startMiningTimer(session);
-                }
-                
-            } catch (error) {
-                console.error('Error loading data:', error);
-            } finally {
-                document.getElementById('loading').classList.remove('active');
-            }
+            return user;
         }
-
+        
+        // Fetch user profile
+        async function fetchUserProfile(userId) {
+            const { data, error } = await supabase
+                .from('user_profiles')
+                .select('*')
+                .eq('user_id', userId)
+                .single();
+            
+            if (error) {
+                console.error('Error fetching profile:', error);
+                return null;
+            }
+            
+            return data;
+        }
+        
+        // Fetch active plan
+        async function fetchActivePlan(userId) {
+            const { data, error } = await supabase
+                .from('plan_purchases')
+                .select(`
+                    *,
+                    plans (*)
+                `)
+                .eq('user_id', userId)
+                .eq('status', 'active')
+                .gte('expiry_date', new Date().toISOString())
+                .order('purchase_date', { ascending: false })
+                .limit(1)
+                .single();
+            
+            if (error) {
+                // User has free plan
+                return {
+                    plan_name: 'Free Trial',
+                    duration_days: 15,
+                    mining_sessions_per_day: 4,
+                    display_earning_min: 0,
+                    display_earning_max: 0,
+                    real_cap_min: 0,
+                    real_cap_max: 0,
+                    is_free: true
+                };
+            }
+            
+            return {
+                ...data,
+                is_free: false
+            };
+        }
+        
+        // Fetch wallets
+        async function fetchWallets(userId) {
+            const { data, error } = await supabase
+                .from('wallets')
+                .select('*')
+                .eq('user_id', userId);
+            
+            if (error) {
+                console.error('Error fetching wallets:', error);
+                return [];
+            }
+            
+            return data;
+        }
+        
+        // Fetch today's earnings
+        async function fetchTodayEarnings(userId) {
+            const today = new Date().toISOString().split('T')[0];
+            
+            const { data, error } = await supabase
+                .from('daily_earnings')
+                .select('earnings, sessions_completed')
+                .eq('user_id', userId)
+                .eq('date', today)
+                .single();
+            
+            if (error) {
+                return { earnings: 0, sessions_completed: 0 };
+            }
+            
+            return data;
+        }
+        
+        // Fetch mining sessions for today
+        async function fetchTodaySessions(userId) {
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            
+            const { data, error } = await supabase
+                .from('mining_sessions')
+                .select('*')
+                .eq('user_id', userId)
+                .gte('created_at', today)
+                .lt('created_at', tomorrowStr);
+            
+            if (error) {
+                console.error('Error fetching sessions:', error);
+                return [];
+            }
+            
+            return data;
+        }
+        
+        // Fetch referral statistics
+        async function fetchReferralStats(userId) {
+            // Get user profile ID
+            const { data: profile } = await supabase
+                .from('user_profiles')
+                .select('id')
+                .eq('user_id', userId)
+                .single();
+            
+            if (!profile) return { total_income: 0, team_count: 0 };
+            
+            // Get referral income
+            const { data: income, error: incomeError } = await supabase
+                .from('referral_transactions')
+                .select('amount')
+                .eq('referrer_id', profile.id);
+            
+            // Get team count
+            const { data: team, error: teamError } = await supabase
+                .from('referrals')
+                .select('id')
+                .eq('referrer_id', profile.id)
+                .eq('is_active', true);
+            
+            const totalIncome = income?.reduce((sum, t) => sum + t.amount, 0) || 0;
+            const teamCount = team?.length || 0;
+            
+            return {
+                total_income: totalIncome,
+                team_count: teamCount
+            };
+        }
+        
+        // Fetch active booster
+        async function fetchActiveBooster(userId) {
+            const now = new Date().toISOString();
+            
+            const { data, error } = await supabase
+                .from('booster_purchases')
+                .select(`
+                    *,
+                    boosters (*)
+                `)
+                .eq('user_id', userId)
+                .eq('is_active', true)
+                .gte('expiry_date', now)
+                .single();
+            
+            if (error) {
+                return null;
+            }
+            
+            return data;
+        }
+        
+        // Fetch earnings history for charts
+        async function fetchEarningsHistory(userId) {
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            
+            const { data, error } = await supabase
+                .from('daily_earnings')
+                .select('date, earnings')
+                .eq('user_id', userId)
+                .gte('date', sevenDaysAgo.toISOString().split('T')[0])
+                .order('date', { ascending: true });
+            
+            if (error) {
+                console.error('Error fetching earnings history:', error);
+                return [];
+            }
+            
+            return data;
+        }
+        
         // Update UI with data
-        function updateUI(profile, wallet, plan, session, todaySessions, booster) {
+        function updateUI() {
             // User info
-            document.getElementById('userAvatar').textContent = 
-                profile.full_name ? profile.full_name.charAt(0).toUpperCase() : 'U';
-            document.getElementById('userName').textContent = 
-                profile.full_name || 'User';
-            
-            // Wallet balances
-            document.getElementById('mainBalance').textContent = 
-                `₹${wallet?.main_balance?.toFixed(2) || '0.00'}`;
-            document.getElementById('bonusBalance').textContent = 
-                `₹${wallet?.bonus_balance?.toFixed(2) || '0.00'}`;
-            document.getElementById('totalEarned').textContent = 
-                `₹${wallet?.total_earned?.toFixed(2) || '0.00'}`;
-            document.getElementById('totalWithdrawn').textContent = 
-                `₹${wallet?.total_withdrawn?.toFixed(2) || '0.00'}`;
+            if (userProfile) {
+                document.getElementById('userName').textContent = userProfile.full_name || 'User';
+                document.getElementById('userAvatar').textContent = userProfile.full_name?.charAt(0) || 'U';
+            }
             
             // Plan info
-            if (plan) {
-                document.getElementById('activePlanName').textContent = plan.plans.name;
-                document.getElementById('planBadge').textContent = `${plan.plans.name} Plan`;
-                document.getElementById('dailySessions').textContent = plan.plans.mining_per_day;
-                document.getElementById('planDays').textContent = plan.plans.days;
-                document.getElementById('planCap').textContent = `₹${plan.plans.real_cap_max}`;
+            if (userPlan) {
+                const planName = userPlan.is_free ? 'Free Trial' : userPlan.plans?.name || 'Plan';
+                document.getElementById('userPlan').textContent = planName;
+                document.getElementById('planType').textContent = planName;
+                document.getElementById('planBadge').textContent = userPlan.is_free ? 'FREE' : 'ACTIVE';
                 
-                // Calculate plan progress
-                const startDate = new Date(plan.start_date);
-                const endDate = new Date(plan.end_date);
-                const today = new Date();
-                const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-                const daysLeft = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
-                const progress = ((totalDays - daysLeft) / totalDays) * 100;
-                
-                document.getElementById('planProgress').style.width = `${progress}%`;
-                document.getElementById('planDaysLeft').textContent = `${daysLeft} days left`;
-            } else {
-                document.getElementById('activePlanName').textContent = 'No Plan';
-                document.getElementById('planBadge').textContent = 'Free Plan';
-                document.getElementById('dailySessions').textContent = '4';
-                document.getElementById('planDays').textContent = '15';
-                document.getElementById('planCap').textContent = '₹0';
-            }
-            
-            // Mining info
-            const sessionsToday = todaySessions?.length || 0;
-            const maxSessions = plan?.plans?.mining_per_day || 4;
-            document.getElementById('todaySessionsCount').textContent = 
-                `${sessionsToday}/${maxSessions}`;
-            
-            // Booster info
-            const multiplier = booster?.boosters?.multiplier || 1.0;
-            document.getElementById('boosterMultiplier').textContent = `${multiplier.toFixed(1)}x`;
-            
-            // Session earnings calculation
-            const baseEarning = 0.5;
-            const sessionEarning = baseEarning * multiplier;
-            document.getElementById('sessionEarnings').textContent = `₹${sessionEarning.toFixed(2)}`;
-        }
-
-        // Start mining timer
-        function startMiningTimer(session) {
-            if (!session) return;
-            
-            const startTime = new Date(session.start_time);
-            const duration = 90 * 60 * 1000; // 90 minutes in milliseconds
-            const endTime = new Date(startTime.getTime() + duration);
-            
-            function updateTimer() {
-                const now = new Date();
-                const remaining = endTime - now;
-                
-                if (remaining <= 0) {
-                    clearInterval(miningTimer);
-                    document.getElementById('miningTimer').textContent = '00:00:00';
-                    document.getElementById('miningProgress').style.width = '100%';
-                    return;
+                // Plan expiry
+                if (userPlan.is_free) {
+                    const expiryDate = new Date(userPlan.expiry_date);
+                    const today = new Date();
+                    const diffTime = expiryDate - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    document.getElementById('planExpiry').textContent = `${diffDays} days`;
+                    
+                    // Progress
+                    const totalDays = 15;
+                    const progress = ((totalDays - diffDays) / totalDays) * 100;
+                    document.getElementById('planProgress').style.width = `${progress}%`;
+                } else if (userPlan.expiry_date) {
+                    const expiryDate = new Date(userPlan.expiry_date);
+                    const today = new Date();
+                    const diffTime = expiryDate - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    document.getElementById('planExpiry').textContent = `${diffDays} days`;
+                    
+                    // Progress
+                    const totalDays = userPlan.plans?.duration_days || 30;
+                    const daysUsed = totalDays - diffDays;
+                    const progress = (daysUsed / totalDays) * 100;
+                    document.getElementById('planProgress').style.width = `${progress}%`;
                 }
                 
-                const hours = Math.floor(remaining / (1000 * 60 * 60));
-                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                // Sessions
+                const maxSessions = userPlan.is_free ? 4 : userPlan.plans?.mining_sessions_per_day || 4;
+                const usedSessions = miningStats?.completed_sessions || 0;
+                document.getElementById('planSessions').textContent = `${usedSessions}/${maxSessions}`;
+                const sessionsProgress = (usedSessions / maxSessions) * 100;
+                document.getElementById('sessionsProgress').style.width = `${sessionsProgress}%`;
+                document.getElementById('sessionsCount').textContent = `${usedSessions}/${maxSessions}`;
                 
-                document.getElementById('miningTimer').textContent = 
-                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                
-                const progress = ((duration - remaining) / duration) * 100;
-                document.getElementById('miningProgress').style.width = `${progress}%`;
+                // Earnings cap
+                const capMin = userPlan.plans?.real_cap_min || 0;
+                const capMax = userPlan.plans?.real_cap_max || 0;
+                const currentEarnings = miningStats?.total_earnings || 0;
+                const cap = capMax > 0 ? capMax : 0;
+                document.getElementById('earningsCap').textContent = `₹${currentEarnings.toFixed(2)}/₹${cap}`;
+                const earningsProgress = cap > 0 ? (currentEarnings / cap) * 100 : 0;
+                document.getElementById('earningsProgress').style.width = `${earningsProgress}%`;
             }
             
-            updateTimer();
-            miningTimer = setInterval(updateTimer, 1000);
-        }
-
-        // Load charts
-        function loadCharts() {
-            const ctx1 = document.getElementById('earningsChart').getContext('2d');
-            const ctx2 = document.getElementById('sessionsChart').getContext('2d');
+            // Wallets
+            const mainWallet = wallets.find(w => w.wallet_type === 'main');
+            const bonusWallet = wallets.find(w => w.wallet_type === 'bonus');
             
-            // Earnings chart
-            new Chart(ctx1, {
+            if (mainWallet) {
+                const totalBalance = mainWallet.balance + (bonusWallet?.balance || 0);
+                document.getElementById('totalBalance').textContent = `₹${totalBalance.toFixed(2)}`;
+                document.getElementById('availableBalance').textContent = `₹${mainWallet.balance.toFixed(2)}`;
+            }
+            
+            // Today's earnings
+            if (miningStats) {
+                document.getElementById('todayEarnings').textContent = `₹${miningStats.today_earnings.toFixed(2)}`;
+                document.getElementById('todayTrend').innerHTML = miningStats.today_earnings > 0 ? 
+                    '<span>↑</span> <span>Active</span>' : 
+                    '<span>→</span> <span>No earnings yet</span>';
+            }
+            
+            // Referral stats
+            if (referralStats) {
+                document.getElementById('referralIncome').textContent = `₹${referralStats.total_income.toFixed(2)}`;
+                document.getElementById('referralCount').textContent = `${referralStats.team_count} Members`;
+            }
+            
+            // Booster status
+            const activeBooster = window.activeBooster;
+            if (activeBooster) {
+                document.getElementById('boosterStatus').textContent = activeBooster.boosters?.name || 'Active';
+                document.getElementById('boosterMultiplier').textContent = `${activeBooster.boosters?.multiplier || 1.0}x`;
+            }
+        }
+        
+        // Initialize charts
+        function initCharts(earningsHistory) {
+            // Daily earnings chart
+            const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+            
+            // Prepare data for last 7 days
+            const last7Days = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                last7Days.push(date.toISOString().split('T')[0]);
+            }
+            
+            const dailyData = last7Days.map(date => {
+                const dayData = earningsHistory.find(d => d.date === date);
+                return dayData?.earnings || 0;
+            });
+            
+            const dailyLabels = last7Days.map(date => {
+                const d = new Date(date);
+                return d.toLocaleDateString('en-US', { weekday: 'short' });
+            });
+            
+            new Chart(dailyCtx, {
                 type: 'line',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: dailyLabels,
                     datasets: [{
                         label: 'Earnings (₹)',
-                        data: [12, 19, 8, 15, 22, 18, 25],
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        data: dailyData,
+                        borderColor: '#00ff9d',
+                        backgroundColor: 'rgba(0, 255, 157, 0.1)',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4
@@ -817,7 +978,7 @@
                                 color: 'rgba(255, 255, 255, 0.1)'
                             },
                             ticks: {
-                                color: '#94a3b8'
+                                color: '#b0b0b0'
                             }
                         },
                         x: {
@@ -825,23 +986,29 @@
                                 color: 'rgba(255, 255, 255, 0.1)'
                             },
                             ticks: {
-                                color: '#94a3b8'
+                                color: '#b0b0b0'
                             }
                         }
                     }
                 }
             });
             
-            // Sessions chart
-            new Chart(ctx2, {
+            // Weekly earnings chart
+            const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+            
+            // Calculate weekly totals (last 4 weeks)
+            const weeklyData = [450, 620, 380, 550]; // Mock data
+            const weeklyLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+            
+            new Chart(weeklyCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: weeklyLabels,
                     datasets: [{
-                        label: 'Sessions',
-                        data: [6, 8, 7, 9, 10, 8, 9],
-                        backgroundColor: 'rgba(139, 92, 246, 0.5)',
-                        borderColor: '#8b5cf6',
+                        label: 'Weekly Earnings (₹)',
+                        data: weeklyData,
+                        backgroundColor: 'rgba(77, 121, 255, 0.8)',
+                        borderColor: 'rgba(77, 121, 255, 1)',
                         borderWidth: 1
                     }]
                 },
@@ -860,8 +1027,7 @@
                                 color: 'rgba(255, 255, 255, 0.1)'
                             },
                             ticks: {
-                                color: '#94a3b8',
-                                stepSize: 2
+                                color: '#b0b0b0'
                             }
                         },
                         x: {
@@ -869,41 +1035,78 @@
                                 color: 'rgba(255, 255, 255, 0.1)'
                             },
                             ticks: {
-                                color: '#94a3b8'
+                                color: '#b0b0b0'
                             }
                         }
                     }
                 }
             });
         }
-
-        // Logout
+        
+        // Load all data
+        async function loadDashboardData() {
+            document.getElementById('loading').style.display = 'flex';
+            
+            try {
+                const user = await checkAuth();
+                if (!user) return;
+                
+                // Fetch all data in parallel
+                const [
+                    profile,
+                    plan,
+                    walletData,
+                    todayEarnings,
+                    todaySessions,
+                    referralData,
+                    booster,
+                    earningsHistory
+                ] = await Promise.all([
+                    fetchUserProfile(user.id),
+                    fetchActivePlan(user.id),
+                    fetchWallets(user.id),
+                    fetchTodayEarnings(user.id),
+                    fetchTodaySessions(user.id),
+                    fetchReferralStats(user.id),
+                    fetchActiveBooster(user.id),
+                    fetchEarningsHistory(user.id)
+                ]);
+                
+                userProfile = profile;
+                userPlan = plan;
+                wallets = walletData;
+                window.activeBooster = booster;
+                
+                miningStats = {
+                    today_earnings: todayEarnings.earnings,
+                    completed_sessions: todaySessions.filter(s => s.status === 'completed').length,
+                    total_earnings: walletData.find(w => w.wallet_type === 'main')?.balance || 0
+                };
+                
+                referralStats = referralData;
+                
+                updateUI();
+                initCharts(earningsHistory);
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                alert('Error loading dashboard data. Please refresh.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        // Logout function
         async function logout() {
             await supabase.auth.signOut();
             window.location.href = 'login.html';
         }
-
-        // Real-time updates
-        function setupRealtime() {
-            const channel = supabase.channel('dashboard_updates')
-                .on('postgres_changes', 
-                    { 
-                        event: '*', 
-                        schema: 'public', 
-                        table: 'wallets',
-                        filter: `user_id=eq.${user.id}`
-                    }, 
-                    () => {
-                        loadUserData(); // Reload when wallet changes
-                    }
-                )
-                .subscribe();
-        }
-
-        // Initialize
-        checkAuth().then(() => {
-            setupRealtime();
-        });
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadDashboardData, 30000);
     </script>
 </body>
 </html>

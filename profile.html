@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - EARO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #10b981;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            font-weight: 600;
+            border: 4px solid var(--dark);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .profile-email {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        /* Profile Sections */
+        .profile-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .edit-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Form Groups */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e2e8f0;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* KYC Section */
+        .kyc-status {
+            padding: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .kyc-status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .kyc-status.rejected {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .kyc-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .kyc-status.verified .kyc-icon {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+        }
+
+        .kyc-status.pending .kyc-icon {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .kyc-status.rejected .kyc-icon {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .kyc-info h4 {
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .kyc-info p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .kyc-upload {
+            margin-top: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: #94a3b8;
+            margin-bottom: 15px;
+        }
+
+        .upload-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Security Section */
+        .security-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .security-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .security-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .security-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+        }
+
+        .security-details h4 {
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .security-details p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .security-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.enabled {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+        }
+
+        .status-badge.disabled {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .danger-zone .section-title {
+            color: #ef4444;
+        }
+
+        .danger-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .danger-btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .danger-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--dark);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 30px;
+        }
+
+        .modal-header h3 {
+            font-size: 24px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .modal-content {
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.confirm {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .modal-btn.cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-btn.danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: white;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 12px;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+        }
+
+        .nav-item:hover {
+            color: white;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message.active {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-stats {
+                flex-wrap: wrap;
+            }
+            
+            .modal {
+                padding: 30px 20px;
+            }
+            
+            .danger-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">EARO</div>
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Loading profile...</p>
+        </div>
+
+        <!-- Profile Header -->
+        <div class="profile-header" id="profileHeader">
+            <!-- Will be loaded dynamically -->
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i>
+            <span id="successText"></span>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="profile-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-user"></i> Personal Information</h2>
+                <button class="edit-btn" onclick="enableEdit('personal')">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+            </div>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="fullName" placeholder="Enter your full name" disabled>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" disabled>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone" placeholder="Enter your phone number" disabled>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <div class="input-group">
+                        <i class="fas fa-calendar"></i>
+                        <input type="date" id="dob" disabled>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="address">Address</label>
+                <div class="input-group">
+                    <i class="fas fa-home"></i>
+                    <input type="text" id="address" placeholder="Enter your address" disabled>
+                </div>
+            </div>
+            
+            <button class="upload-btn" id="savePersonalBtn" onclick="savePersonalInfo()" style="display: none; margin-top: 20px;">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+
+        <!-- KYC Verification -->
+        <div class="profile-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-id-card"></i> KYC Verification</h2>
+            </div>
+            
+            <div class="kyc-status" id="kycStatus">
+                <!-- Will be loaded dynamically -->
+            </div>
+            
+            <div class="kyc-upload" id="kycUpload">
+                <!-- Will be loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="profile-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-shield-alt"></i> Security</h2>
+            </div>
+            
+            <div class="security-items">
+                <div class="security-item">
+                    <div class="security-info">
+                        <div class="security-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="security-details">
+                            <h4>Password</h4>
+                            <p>Last changed: <span id="lastPasswordChange">Never</span></p>
+                        </div>
+                    </div>
+                    <div class="security-status">
+                        <span class="status-badge enabled">Enabled</span>
+                        <button class="edit-btn" onclick="changePassword()">
+                            Change
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="security-item">
+                    <div class="security-info">
+                        <div class="security-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="security-details">
+                            <h4>Two-Factor Authentication</h4>
+                            <p>Add an extra layer of security</p>
+                        </div>
+                    </div>
+                    <div class="security-status">
+                        <span class="status-badge disabled" id="2faStatus">Disabled</span>
+                        <button class="edit-btn" onclick="toggle2FA()">
+                            Enable
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="security-item">
+                    <div class="security-info">
+                        <div class="security-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="security-details">
+                            <h4>Login History</h4>
+                            <p>View recent login activity</p>
+                        </div>
+                    </div>
+                    <div class="security-status">
+                        <button class="edit-btn" onclick="viewLoginHistory()">
+                            View
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="profile-section danger-zone">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
+            </div>
+            
+            <p style="color: #94a3b8; margin-bottom: 20px;">
+                These actions are irreversible. Please proceed with caution.
+            </p>
+            
+            <div class="danger-buttons">
+                <button class="danger-btn" onclick="deleteAccount()">
+                    <i class="fas fa-trash"></i> Delete Account
+                </button>
+                <button class="danger-btn" onclick="logoutAllDevices()">
+                    <i class="fas fa-sign-out-alt"></i> Logout All Devices
+                </button>
+                <button class="danger-btn" onclick="exportData()">
+                    <i class="fas fa-download"></i> Export My Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Change Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            
+            <div class="modal-header">
+                <h3><i class="fas fa-lock"></i> Change Password</h3>
+            </div>
+            
+            <div class="modal-content">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="currentPassword" placeholder="Enter current password">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="newPassword" placeholder="Enter new password">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="updatePassword()">Update Password</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2FA Setup Modal -->
+    <div class="modal-overlay" id="twoFAModal">
+        <div class="modal">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            
+            <div class="modal-header">
+                <h3><i class="fas fa-mobile-alt"></i> Two-Factor Authentication</h3>
+            </div>
+            
+            <div class="modal-content" id="2faContent">
+                <!-- Will be loaded dynamically -->
+            </div>
+            
+            <div class="modal-actions" id="2faActions">
+                <!-- Will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="confirmTitle"></h3>
+            </div>
+            <div class="modal-content" id="confirmContent">
+                <!-- Content will be set dynamically -->
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn danger" id="confirmActionBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="mining.html" class="nav-item">
+            <i class="fas fa-digging"></i>
+            <span>Mining</span>
+        </a>
+        <a href="plans.html" class="nav-item">
+            <i class="fas fa-gem"></i>
+            <span>Plans</span>
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase configuration
+        const supabaseUrl = 'https://qvbvgpzmwomtcvejkibs.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YnZncHptd29tdGN2ZWpraWJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NjE1NDksImV4cCI6MjA4MTEzNzU0OX0.B7ED7dNB3Gdkq8mw20Y5iTixqvxl73UJYTHgKyLfSLs';
+        
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Global variables
+        let user = null;
+        let userProfile = null;
+        let editingPersonal = false;
+
+        // Check authentication
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+            user = session.user;
+            await loadProfileData();
+        }
+
+        // Load profile data
+        async function loadProfileData() {
+            document.getElementById('loading').classList.add('active');
+            
+            try {
+                // Get user profile
+                const { data: profile } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                userProfile = profile;
+                
+                // Get user stats
+                const { data: wallet } = await supabase
+                    .from('wallets')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                // Update UI
+                updateUI(profile, wallet);
+                
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+            }
+        }
+
+        // Update UI
+        function updateUI(profile, wallet) {
+            // Update profile header
+            const header = document.getElementById('profileHeader');
+            const firstName = profile.full_name ? profile.full_name.split(' ')[0] : 'User';
+            const initial = profile.full_name ? profile.full_name.charAt(0).toUpperCase() : 'U';
+            
+            header.innerHTML = `
+                <div class="profile-avatar">${initial}</div>
+                <div class="profile-name">${profile.full_name || 'User'}</div>
+                <div class="profile-email">${user.email}</div>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">₹${wallet?.total_earned?.toFixed(2) || '0.00'}</div>
+                        <div class="stat-label">Total Earned</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${profile.referral_code ? profile.referral_code : 'N/A'}</div>
+                        <div class="stat-label">Referral Code</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${profile.is_kyc_verified ? 'Verified' : 'Pending'}</div>
+                        <div class="stat-label">KYC Status</div>
+                    </div>
+                </div>
+            `;
+            
+            // Update form fields
+            document.getElementById('fullName').value = profile.full_name || '';
+            document.getElementById('email').value = user.email;
+            document.getElementById('phone').value = profile.phone || '';
+            document.getElementById('dob').value = profile.dob || '';
+            document.getElementById('address').value = profile.address || '';
+            
+            // Update KYC status
+            updateKYCStatus(profile);
+        }
+
+        // Update KYC status
+        function updateKYCStatus(profile) {
+            const kycStatus = document.getElementById('kycStatus');
+            const kycUpload = document.getElementById('kycUpload');
+            
+            if (profile.is_kyc_verified) {
+                kycStatus.innerHTML = `
+                    <div class="kyc-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="kyc-info">
+                        <h4>KYC Verified</h4>
+                        <p>Your identity has been successfully verified</p>
+                    </div>
+                `;
+                kycStatus.className = 'kyc-status verified';
+                kycUpload.innerHTML = '';
+                
+            } else if (profile.kyc_status === 'pending') {
+                kycStatus.innerHTML = `
+                    <div class="kyc-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="kyc-info">
+                        <h4>KYC Under Review</h4>
+                        <p>Your documents are being reviewed. This usually takes 24-48 hours.</p>
+                    </div>
+                `;
+                kycStatus.className = 'kyc-status pending';
+                kycUpload.innerHTML = '';
+                
+            } else if (profile.kyc_status === 'rejected') {
+                kycStatus.innerHTML = `
+                    <div class="kyc-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="kyc-info">
+                        <h4>KYC Rejected</h4>
+                        <p>${profile.kyc_rejection_reason || 'Please upload valid documents'}</p>
+                    </div>
+                `;
+                kycStatus.className = 'kyc-status rejected';
+                kycUpload.innerHTML = createKYCUploadForm();
+                
+            } else {
+                kycStatus.innerHTML = `
+                    <div class="kyc-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div class="kyc-info">
+                        <h4>KYC Not Verified</h4>
+                        <p>Complete KYC verification to enable withdrawals</p>
+                    </div>
+                `;
+                kycStatus.className = 'kyc-status';
+                kycUpload.innerHTML = createKYCUploadForm();
+            }
+        }
+
+        // Create KYC upload form
+        function createKYCUploadForm() {
+            return `
+                <p style="color: #94a3b8; margin-bottom: 20px;">
+                    Upload the following documents for verification:
+                </p>
+                
+                <div class="upload-area" onclick="document.getElementById('aadharFront').click()" id="aadharFrontArea">
+                    <i class="fas fa-id-card"></i>
+                    <h4 style="color: white; margin-bottom: 10px;">Aadhaar Card Front</h4>
+                    <p style="color: #94a3b8; font-size: 14px;">Click to upload</p>
+                    <input type="file" id="aadharFront" style="display: none;" accept="image/*,.pdf" onchange="handleFileUpload('aadharFront')">
+                </div>
+                
+                <div class="upload-area" onclick="document.getElementById('aadharBack').click()" id="aadharBackArea" style="margin-top: 15px;">
+                    <i class="fas fa-id-card"></i>
+                    <h4 style="color: white; margin-bottom: 10px;">Aadhaar Card Back</h4>
+                    <p style="color: #94a3b8; font-size: 14px;">Click to upload</p>
+                    <input type="file" id="aadharBack" style="display: none;" accept="image/*,.pdf" onchange="handleFileUpload('aadharBack')">
+                </div>
+                
+                <div class="upload-area" onclick="document.getElementById('panCard').click()" id="panCardArea" style="margin-top: 15px;">
+                    <i class="fas fa-file-invoice"></i>
+                    <h4 style="color: white; margin-bottom: 10px;">PAN Card</h4>
+                    <p style="color: #94a3b8; font-size: 14px;">Click to upload</p>
+                    <input type="file" id="panCard" style="display: none;" accept="image/*,.pdf" onchange="handleFileUpload('panCard')">
+                </div>
+                
+                <button class="upload-btn" onclick="submitKYC()" style="margin-top: 30px;">
+                    <i class="fas fa-paper-plane"></i> Submit for Verification
+                </button>
+            `;
+        }
+
+        // Enable edit mode
+        function enableEdit(section) {
+            if (section === 'personal') {
+                editingPersonal = true;
+                document.getElementById('fullName').disabled = false;
+                document.getElementById('phone').disabled = false;
+                document.getElementById('dob').disabled = false;
+                document.getElementById('address').disabled = false;
+                document.getElementById('savePersonalBtn').style.display = 'block';
+            }
+        }
+
+        // Save personal info
+        async function savePersonalInfo() {
+            const fullName = document.getElementById('fullName').value;
+            const phone = document.getElementById('phone').value;
+            const dob = document.getElementById('dob').value;
+            const address = document.getElementById('address').value;
+            
+            try {
+                const { error } = await supabase
+                    .from('user_profiles')
+                    .update({
+                        full_name: fullName,
+                        phone: phone,
+                        dob: dob,
+                        address: address,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('user_id', user.id);
+                
+                if (error) throw error;
+                
+                // Disable editing
+                editingPersonal = false;
+                document.getElementById('fullName').disabled = true;
+                document.getElementById('phone').disabled = true;
+                document.getElementById('dob').disabled = true;
+                document.getElementById('address').disabled = true;
+                document.getElementById('savePersonalBtn').style.display = 'none';
+                
+                // Show success message
+                showSuccess('Profile updated successfully!');
+                
+                // Reload profile
+                await loadProfileData();
+                
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile. Please try again.');
+            }
+        }
+
+        // Handle file upload
+        function handleFileUpload(field) {
+            const fileInput = document.getElementById(field);
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const area = document.getElementById(field + 'Area');
+                area.innerHTML = `
+                    <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+                    <h4 style="color: white; margin-bottom: 10px;">${file.name}</h4>
+                    <p style="color: var(--accent); font-size: 14px;">Uploaded successfully</p>
+                `;
+                area.style.borderColor = 'var(--accent)';
+                area.style.background = 'rgba(16, 185, 129, 0.1)';
+            }
+        }
+
+        // Submit KYC
+        async function submitKYC() {
+            const aadharFront = document.getElementById('aadharFront').files[0];
+            const aadharBack = document.getElementById('aadharBack').files[0];
+            const panCard = document.getElementById('panCard').files[0];
+            
+            if (!aadharFront || !aadharBack || !panCard) {
+                alert('Please upload all required documents');
+                return;
+            }
+            
+            try {
+                // In a real app, you would upload files to storage
+                // For now, we'll simulate KYC submission
+                
+                const { error } = await supabase
+                    .from('user_profiles')
+                    .update({
+                        kyc_status: 'pending',
+                        kyc_submitted_at: new Date().toISOString()
+                    })
+                    .eq('user_id', user.id);
+                
+                if (error) throw error;
+                
+                alert('KYC documents submitted successfully! They will be reviewed within 24-48 hours.');
+                await loadProfileData();
+                
+            } catch (error) {
+                console.error('Error submitting KYC:', error);
+                alert('Failed to submit KYC. Please try again.');
+            }
+        }
+
+        // Change password
+        function changePassword() {
+            document.getElementById('passwordModal').classList.add('active');
+        }
+
+        // Update password
+        async function updatePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('Password must be at least 6 characters');
+                return;
+            }
+            
+            try {
+                // Update password
+                const { error } = await supabase.auth.updateUser({
+                    password: newPassword
+                });
+                
+                if (error) throw error;
+                
+                alert('Password updated successfully!');
+                closeModal();
+                
+                // Clear fields
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                
+            } catch (error) {
+                console.error('Error updating password:', error);
+                alert('Failed to update password. Please check your current password.');
+            }
+        }
+
+        // Toggle 2FA
+        function toggle2FA() {
+            const isEnabled = document.getElementById('2faStatus').textContent === 'Enabled';
+            
+            if (isEnabled) {
+                showConfirmation(
+                    'Disable Two-Factor Authentication',
+                    'Are you sure you want to disable 2FA? This will reduce your account security.',
+                    'Disable 2FA',
+                    () => disable2FA()
+                );
+            } else {
+                setup2FA();
+            }
+        }
+
+        // Setup 2FA
+        function setup2FA() {
+            // In a real app, you would generate a QR code for 2FA
+            // For now, we'll show a simulated setup
+            
+            document.getElementById('2faContent').innerHTML = `
+                <p style="margin-bottom: 20px;">Scan this QR code with your authenticator app:</p>
+                <div style="text-align: center; margin: 20px 0; padding: 20px; background: white; border-radius: 10px; display: inline-block;">
+                    <div style="width: 200px; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #666;">QR Code Placeholder</span>
+                    </div>
+                </div>
+                <p style="margin-top: 20px; margin-bottom: 15px;">Or enter this code manually:</p>
+                <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; font-family: monospace; letter-spacing: 2px; text-align: center; margin-bottom: 20px;">
+                    JBSWY3DPEHPK3PXP
+                </div>
+                <div class="form-group">
+                    <label for="2faCode">Enter 6-digit code from your app</label>
+                    <div class="input-group">
+                        <i class="fas fa-key"></i>
+                        <input type="text" id="2faCode" placeholder="000000" maxlength="6">
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('2faActions').innerHTML = `
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="verify2FA()">Verify & Enable</button>
+            `;
+            
+            document.getElementById('twoFAModal').classList.add('active');
+        }
+
+        // Verify 2FA
+        async function verify2FA() {
+            const code = document.getElementById('2faCode').value;
+            
+            if (!code || code.length !== 6) {
+                alert('Please enter a valid 6-digit code');
+                return;
+            }
+            
+            // In a real app, you would verify the TOTP code
+            // For now, we'll simulate success
+            
+            try {
+                // Update 2FA status
+                document.getElementById('2faStatus').textContent = 'Enabled';
+                document.getElementById('2faStatus').className = 'status-badge enabled';
+                
+                // Update button text
+                const toggleBtn = document.querySelector('[onclick="toggle2FA()"]');
+                if (toggleBtn) {
+                    toggleBtn.textContent = 'Disable';
+                }
+                
+                alert('Two-factor authentication enabled successfully!');
+                closeModal();
+                
+            } catch (error) {
+                console.error('Error enabling 2FA:', error);
+                alert('Failed to enable 2FA. Please try again.');
+            }
+        }
+
+        // Disable 2FA
+        async function disable2FA() {
+            try {
+                // Update 2FA status
+                document.getElementById('2faStatus').textContent = 'Disabled';
+                document.getElementById('2faStatus').className = 'status-badge disabled';
+                
+                // Update button text
+                const toggleBtn = document.querySelector('[onclick="toggle2FA()"]');
+                if (toggleBtn) {
+                    toggleBtn.textContent = 'Enable';
+                }
+                
+                alert('Two-factor authentication disabled successfully!');
+                
+            } catch (error) {
+                console.error('Error disabling 2FA:', error);
+                alert('Failed to disable 2FA. Please try again.');
+            }
+        }
+
+        // View login history
+        function viewLoginHistory() {
+            alert('Login history feature coming soon!');
+        }
+
+        // Delete account
+        function deleteAccount() {
+            showConfirmation(
+                'Delete Account',
+                'This action is permanent and cannot be undone. All your data, earnings, and referrals will be lost.',
+                'Delete Account',
+                () => confirmDeleteAccount()
+            );
+        }
+
+        // Confirm delete account
+        async function confirmDeleteAccount() {
+            try {
+                // In a real app, you would schedule account deletion
+                // For now, we'll just show a message
+                alert('Account deletion request submitted. Your account will be deleted in 30 days.');
+                closeModal();
+                
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                alert('Failed to delete account. Please try again.');
+            }
+        }
+
+        // Logout all devices
+        function logoutAllDevices() {
+            showConfirmation(
+                'Logout All Devices',
+                'This will log you out from all devices except this one. You will need to login again on other devices.',
+                'Logout All',
+                () => confirmLogoutAll()
+            );
+        }
+
+        // Confirm logout all devices
+        async function confirmLogoutAll() {
+            try {
+                // In a real app, you would invalidate all sessions
+                // For now, we'll just show a message
+                alert('All other devices have been logged out successfully.');
+                closeModal();
+                
+            } catch (error) {
+                console.error('Error logging out devices:', error);
+                alert('Failed to logout devices. Please try again.');
+            }
+        }
+
+        // Export data
+        function exportData() {
+            alert('Data export feature coming soon!');
+        }
+
+        // Show confirmation dialog
+        function showConfirmation(title, content, actionText, actionCallback) {
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmContent').textContent = content;
+            document.getElementById('confirmActionBtn').textContent = actionText;
+            
+            // Set up action button
+            const actionBtn = document.getElementById('confirmActionBtn');
+            actionBtn.onclick = function() {
+                actionCallback();
+                closeModal();
+            };
+            
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            document.getElementById('successText').textContent = message;
+            document.getElementById('successMessage').classList.add('active');
+            
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('active');
+            }, 3000);
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('passwordModal').classList.remove('active');
+            document.getElementById('twoFAModal').classList.remove('active');
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+              </html>
